@@ -3,6 +3,10 @@
     "info": {
         "title": "Axiom Relay",
         "version": "0.1.0",
+        "license": {
+            "name": "MIT",
+            "identifier": "MIT"
+        },
         "summary": "Non-custodial x402 v2 routing relay for autonomous agents.",
         "description": "Axiom routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."
     },
@@ -11,6 +15,7 @@
             "url": "https://axiom-relay.reference-seller.workers.dev"
         }
     ],
+    "security": [],
     "x-x402": {
         "version": 2,
         "networks": [
@@ -44,8 +49,25 @@
                             }
                         }
                     },
+                    "429": {
+                        "description": "Rate limited",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
                     "503": {
-                        "description": "Degraded or disabled"
+                        "description": "Degraded or disabled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -57,6 +79,26 @@
                 "responses": {
                     "200": {
                         "description": "Service descriptor"
+                    },
+                    "429": {
+                        "description": "Rate limited",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Relay disabled or misconfigured",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -68,6 +110,26 @@
                 "responses": {
                     "200": {
                         "description": "Resource list"
+                    },
+                    "429": {
+                        "description": "Rate limited",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Relay disabled or misconfigured",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -200,86 +262,10 @@
                                             "format": "date-time"
                                         },
                                         "downstream": {
-                                            "type": "object",
-                                            "required": [
-                                                "scheme",
-                                                "network",
-                                                "asset",
-                                                "amount",
-                                                "payTo",
-                                                "maxTimeoutSeconds"
-                                            ],
-                                            "properties": {
-                                                "scheme": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "exact"
-                                                    ]
-                                                },
-                                                "network": {
-                                                    "type": "string",
-                                                    "description": "CAIP-2 network identifier, e.g. eip155:84532"
-                                                },
-                                                "asset": {
-                                                    "type": "string",
-                                                    "description": "Token contract address"
-                                                },
-                                                "amount": {
-                                                    "type": "string",
-                                                    "description": "Atomic units as a decimal string"
-                                                },
-                                                "payTo": {
-                                                    "type": "string"
-                                                },
-                                                "maxTimeoutSeconds": {
-                                                    "type": "integer"
-                                                },
-                                                "extra": {
-                                                    "type": "object",
-                                                    "additionalProperties": true
-                                                }
-                                            }
+                                            "$ref": "#/components/schemas/PaymentRequirements"
                                         },
                                         "axiomFee": {
-                                            "type": "object",
-                                            "required": [
-                                                "scheme",
-                                                "network",
-                                                "asset",
-                                                "amount",
-                                                "payTo",
-                                                "maxTimeoutSeconds"
-                                            ],
-                                            "properties": {
-                                                "scheme": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "exact"
-                                                    ]
-                                                },
-                                                "network": {
-                                                    "type": "string",
-                                                    "description": "CAIP-2 network identifier, e.g. eip155:84532"
-                                                },
-                                                "asset": {
-                                                    "type": "string",
-                                                    "description": "Token contract address"
-                                                },
-                                                "amount": {
-                                                    "type": "string",
-                                                    "description": "Atomic units as a decimal string"
-                                                },
-                                                "payTo": {
-                                                    "type": "string"
-                                                },
-                                                "maxTimeoutSeconds": {
-                                                    "type": "integer"
-                                                },
-                                                "extra": {
-                                                    "type": "object",
-                                                    "additionalProperties": true
-                                                }
-                                            }
+                                            "$ref": "#/components/schemas/PaymentRequirements"
                                         },
                                         "total": {
                                             "type": "object"
@@ -294,26 +280,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -323,26 +290,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -352,26 +300,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -381,26 +310,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -410,26 +320,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -439,26 +330,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -468,26 +340,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -582,26 +435,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -614,26 +448,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -643,26 +458,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -672,26 +468,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -701,26 +478,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -730,26 +488,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -759,26 +498,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "required": [
-                                        "error",
-                                        "code",
-                                        "retryable"
-                                    ],
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        },
-                                        "code": {
-                                            "type": "string"
-                                        },
-                                        "detail": {
-                                            "type": "string"
-                                        },
-                                        "retryable": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -800,7 +520,14 @@
                         "description": "Counters"
                     },
                     "401": {
-                        "description": "Missing or invalid admin token"
+                        "description": "Missing or invalid admin token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
