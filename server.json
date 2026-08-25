@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.Itr3k/axiom-x402-payment-relay",
-  "title": "Axiom Relay",
-  "description": "Find and buy paid x402 APIs on Base, ranked by price and reliability. You sign; non-custodial.",
-  "version": "0.1.0",
+  "name": "io.github.Itr3k/axiom-x402-payment-crypto-router",
+  "title": "Axiom by Elevated AI",
+  "description": "Buy paid x402 APIs and route non-custodial crypto swaps on Base. You sign; Axiom holds no funds.",
+  "version": "0.2.0",
   "websiteUrl": "https://github.com/Itr3k/axiom-relay",
   "repository": {
     "url": "https://github.com/Itr3k/axiom-relay",

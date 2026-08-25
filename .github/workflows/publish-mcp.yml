@@ -46,11 +46,11 @@ jobs:
             > /tmp/exchange.json
           TOKEN=$(python3 -c 'import json;print(json.load(open("/tmp/exchange.json")).get("registry_token",""))' 2>/dev/null || true)
           [ -n "$TOKEN" ] || { echo "token exchange failed: $(python3 -c "import json;d=json.load(open(\"/tmp/exchange.json\"));print(d.get(\"detail\",\"unknown\"))")"; exit 1; }
-          OLD=$(python3 -c "import urllib.parse;print(urllib.parse.quote('io.github.Itr3k/axiom-relay',safe=''))")
+          OLD=$(python3 -c "import urllib.parse;print(urllib.parse.quote('io.github.Itr3k/axiom-x402-payment-relay',safe=''))")
           echo "retire response:"
           curl -sS -X PATCH "https://registry.modelcontextprotocol.io/v0.1/servers/$OLD/status" \
             -H "Authorization: Bearer $TOKEN" -H 'content-type: application/json' \
-            -d '{"status":"deleted","statusMessage":"Superseded by io.github.Itr3k/axiom-x402-payment-relay (same endpoint, searchable name)."}'
+            -d '{"status":"deleted","statusMessage":"Superseded by io.github.Itr3k/axiom-x402-payment-crypto-router (same endpoint, adds crypto routing)."}'
           echo
 
       - name: Publish
