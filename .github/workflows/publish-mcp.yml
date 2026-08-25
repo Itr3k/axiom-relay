@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
         run: |
           OIDC=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=mcp-registry" | python3 -c 'import json,sys;print(json.load(sys.stdin)["value"])')
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://registry.modelcontextprotocol.io" | python3 -c 'import json,sys;print(json.load(sys.stdin)["value"])')
           curl -sS -X POST https://registry.modelcontextprotocol.io/v0.1/auth/github-oidc \
             -H 'content-type: application/json' \
             -d "$(python3 -c 'import json,sys;print(json.dumps({"oidc_token":sys.argv[1]}))' "$OIDC")" \
