@@ -1,10 +1,10 @@
 {
-    "name": "Axiom Relay",
-    "description": "x402 smart router for autonomous agents. Given a capability rather than a URL, it discovers x402 providers, validates that they are live, ranks them on price and reliability, pays the seller directly, and returns the result. Non-custodial: the buyer pays the seller, and Axiom holds no key and takes no custody. Routing fee 3% capped at $0.50, waived when too small to settle.",
+    "name": "Axiom by Elevated AI",
+    "description": "Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality. Axiom Services routes x402 payments: given a capability rather than a URL it discovers providers, validates that they are live, ranks them on price and reliability, and pays the seller directly. Service routing fee 3% capped at $0.50, waived when too small to settle.",
     "version": "0.1.0",
     "provider": {
-        "organization": "Axiom Relay",
-        "url": "https://axiom-relay.reference-seller.workers.dev"
+        "organization": "Elevated AI",
+        "url": "https://elevatedai.io"
     },
     "capabilities": {
         "streaming": false,
@@ -25,6 +25,42 @@
         "application/json"
     ],
     "skills": [
+        {
+            "id": "route-crypto-swap",
+            "name": "Route a token swap without taking custody (beta)",
+            "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH. Execution via LI.FI. Axiom fee 15 bps, embedded integrator fee, collected by the execution provider during the swap; provider fees are disclosed separately.",
+            "tags": [
+                "swap-routing",
+                "non-custodial",
+                "defi",
+                "best-execution",
+                "agent-signs"
+            ],
+            "supportedInterfaces": [
+                {
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
+                }
+            ]
+        },
+        {
+            "id": "analyse-crypto-route",
+            "name": "Analyse a swap without receiving a signable transaction",
+            "description": "Compare execution providers, total cost, price impact and route reliability for a prospective swap, and receive a recommendation. Returns no calldata, so it cannot be used to execute.",
+            "tags": [
+                "swap-analysis",
+                "cost-comparison",
+                "read-only"
+            ],
+            "supportedInterfaces": [
+                {
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
+                }
+            ]
+        },
         {
             "id": "discover-paid-provider",
             "name": "Discover an x402 provider for a capability",

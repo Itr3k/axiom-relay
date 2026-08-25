@@ -1,14 +1,14 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Axiom Relay",
+        "title": "Axiom by Elevated AI",
         "version": "0.1.0",
         "license": {
             "name": "MIT",
             "identifier": "MIT"
         },
-        "summary": "Non-custodial x402 v2 routing relay for autonomous agents.",
-        "description": "Axiom routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."
+        "summary": "Route machine spending through one interface \u2014 paid services and non-custodial crypto execution.",
+        "description": "Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.\n\nAxiom Services routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."
     },
     "servers": [
         {
@@ -506,6 +506,150 @@
                 }
             }
         },
+        "/v1/crypto/quote": {
+            "post": {
+                "summary": "Route a token swap and return signable transactions (Beta)",
+                "operationId": "cryptoQuote",
+                "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Status: beta. Execution via LI.FI. Axiom never takes custody and never signs: the transactions returned must be signed by the taker's own wallet. Axiom fee 15 bps; the execution provider's own fee, network gas and slippage are disclosed separately in costDisclosure and are not Axiom revenue. Beta ceilings apply: maximum $500 per trade.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CryptoQuoteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Route selected; transactions returned for the caller to sign"
+                    },
+                    "400": {
+                        "description": "Malformed request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unroutable: chain, token, slippage, size or no viable route",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate or daily volume ceiling reached",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "501": {
+                        "description": "Crypto routing is not enabled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Halted by the crypto kill switch, or misconfigured",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/crypto/analyze": {
+            "post": {
+                "summary": "Analyse a prospective swap without returning a transaction",
+                "operationId": "cryptoAnalyze",
+                "description": "Identical economics to /v1/crypto/quote with the calldata withheld, for a caller that wants the cost of a trade without the means to make it. Returns a recommendation and its concerns.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CryptoQuoteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Analysis and recommendation; no transaction returned"
+                    },
+                    "400": {
+                        "description": "Malformed request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unroutable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate or daily volume ceiling reached",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "501": {
+                        "description": "Crypto routing is not enabled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Halted or misconfigured",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v1/metrics": {
             "get": {
                 "summary": "Operational counters",
@@ -595,6 +739,69 @@
                     },
                     "retryable": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "CryptoQuoteRequest": {
+                "type": "object",
+                "required": [
+                    "fromChain",
+                    "sellToken",
+                    "buyToken",
+                    "sellAmount",
+                    "taker"
+                ],
+                "properties": {
+                    "fromChain": {
+                        "type": "integer",
+                        "description": "Chain id holding the sell token"
+                    },
+                    "toChain": {
+                        "type": "integer",
+                        "description": "Chain id to receive on. Defaults to fromChain."
+                    },
+                    "sellToken": {
+                        "type": "string",
+                        "description": "Contract address of the token being sold. Must be allowlisted."
+                    },
+                    "buyToken": {
+                        "type": "string",
+                        "description": "Contract address of the token being bought. Must be allowlisted."
+                    },
+                    "sellAmount": {
+                        "type": "string",
+                        "description": "Amount in the sell token's atomic units, as a decimal string"
+                    },
+                    "taker": {
+                        "type": "string",
+                        "description": "Wallet that will sign the transactions and receive the output"
+                    },
+                    "slippageBps": {
+                        "type": "integer",
+                        "description": "Slippage tolerance in basis points. Never widened by Axiom."
+                    },
+                    "maxTotalFeeBps": {
+                        "type": "integer",
+                        "description": "Reject any route whose all-in cost exceeds this"
+                    },
+                    "minBuyAmount": {
+                        "type": "string",
+                        "description": "Reject any route guaranteeing less than this"
+                    },
+                    "providers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Restrict to these provider ids"
+                    },
+                    "preference": {
+                        "type": "string",
+                        "enum": [
+                            "reliability",
+                            "latency"
+                        ],
+                        "description": "How to break an economic tie"
                     }
                 }
             }

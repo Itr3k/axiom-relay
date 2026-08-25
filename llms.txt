@@ -37,3 +37,23 @@ Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
   the purchase or provider is invalid.
 - Fallback advances only on positive evidence the previous seller was unpaid;
   an ambiguous settlement halts the attempt chain.
+
+## Axiom Crypto (beta)
+
+Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
+
+Execution providers: LI.FI
+Chains: Ethereum, Base, Arbitrum One, OP Mainnet
+Assets: ETH, USDC, USDT, WETH
+Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap
+Quote: POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote
+Analyze (no transaction returned): POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze
+
+- Beta: conservative trade and daily volume ceilings apply
+- Axiom never takes custody of principal
+- Axiom never signs a customer transaction and holds no customer key
+- Approvals are exact-amount; unlimited approvals are refused
+- Slippage is never widened beyond what the caller specified
+- Route calldata is validated against the request, not trusted from the provider
+- Selection is deterministic and the reason is returned with every quote
+- Provider fees and Axiom's fee are disclosed separately, never as one figure

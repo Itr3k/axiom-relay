@@ -1,0 +1,140 @@
+{
+    "specVersion": "1.0",
+    "host": {
+        "displayName": "Axiom by Elevated AI",
+        "identifier": "did:web:axiom.elevatedai.io"
+    },
+    "entries": [
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:server:mcp",
+            "displayName": "Axiom by Elevated AI \u2014 MCP server",
+            "type": "application/mcp-server-card+json",
+            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json",
+            "description": "Model Context Protocol server for discovering and purchasing paid machine services, and for preparing non-custodial crypto routes. Returns transactions the caller signs; holds no keys.",
+            "capabilities": [
+                "find_paid_resource",
+                "quote_paid_resource",
+                "purchase_paid_resource",
+                "check_provider"
+            ],
+            "representativeQueries": [
+                "how do I buy this paid API",
+                "which x402 service should I use for this capability",
+                "find me an API that does this and pay for it",
+                "what tool can my agent call to spend money safely"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "mcp",
+                "x402",
+                "agent-payments",
+                "non-custodial",
+                "routing"
+            ]
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:agent:axiom",
+            "displayName": "Axiom by Elevated AI \u2014 A2A agent card",
+            "type": "application/a2a-agent-card+json",
+            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json",
+            "description": "Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.",
+            "representativeQueries": [
+                "which agent can route a payment for me",
+                "find a non-custodial financial router",
+                "what agent compares paid API providers"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "a2a",
+                "agent-card",
+                "routing",
+                "machine-commerce"
+            ]
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:api:openapi",
+            "displayName": "Axiom by Elevated AI \u2014 OpenAPI",
+            "type": "application/openapi+json",
+            "url": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+            "description": "OpenAPI 3.1 description of every Axiom endpoint: service quoting and relay, capability routing, and non-custodial crypto quoting and analysis.",
+            "representativeQueries": [
+                "what HTTP API can route an agent payment",
+                "openapi spec for x402 payment routing"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "openapi",
+                "http",
+                "rest"
+            ]
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:skill:axiom",
+            "displayName": "Axiom by Elevated AI \u2014 agent skill",
+            "type": "text/markdown",
+            "url": "https://axiom-relay.reference-seller.workers.dev/SKILL.md",
+            "description": "Operational guidance for an agent deciding when and how to use Axiom: routing a purchase, reading a quote, and handling quota or route failures.",
+            "representativeQueries": [
+                "how should an agent decide to buy a paid resource",
+                "skill for paying for an API from an agent"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "agent-skill",
+                "documentation"
+            ]
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:api:x402-descriptor",
+            "displayName": "Axiom by Elevated AI \u2014 x402 service descriptor",
+            "type": "application/json",
+            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/x402",
+            "description": "Machine-readable x402 v2 service descriptor: supported networks, schemes, fee policy and the capabilities Axiom exposes.",
+            "representativeQueries": [
+                "x402 payment routing service",
+                "which service accepts x402 on Base"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "x402",
+                "payments",
+                "base"
+            ]
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:tool:crypto-routing",
+            "displayName": "Axiom by Elevated AI \u2014 crypto routing (beta)",
+            "type": "application/openapi+json",
+            "url": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+            "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Execution via LI.FI. Axiom fee 15 bps; provider fees, gas and slippage are disclosed separately. Status: beta.",
+            "capabilities": [
+                "quote_crypto_swap",
+                "analyze_crypto_swap"
+            ],
+            "representativeQueries": [
+                "how do I compare crypto swap routes",
+                "prepare a non-custodial swap I can sign myself",
+                "what is the total cost of swapping USDC for ETH on Base",
+                "which route gives the best output after fees and gas",
+                "route a token swap without giving up custody"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "crypto",
+                "swap-routing",
+                "non-custodial",
+                "base",
+                "li.fi"
+            ],
+            "metadata": {
+                "status": "beta",
+                "chains": "Ethereum, Base, Arbitrum One, OP Mainnet",
+                "assets": "ETH, USDC, USDT, WETH",
+                "custody": "non-custodial",
+                "execution": "caller-signs",
+                "maxTradeUsd": 500,
+                "feeBps": 15
+            }
+        }
+    ]
+}

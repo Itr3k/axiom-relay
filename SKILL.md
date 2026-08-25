@@ -119,3 +119,26 @@ quota-limited.
 
 Base mainnet (`eip155:8453`) and Base Sepolia (`eip155:84532`), USDC,
 x402 v2, `exact` scheme.
+
+## Swapping tokens (Axiom Crypto -- beta)
+
+Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
+
+```bash
+curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
+  -H 'content-type: application/json' \
+  -d '{"fromChain":8453,"sellToken":"<address>","buyToken":"<address>","sellAmount":"<atomic>","taker":"<your wallet>"}'
+```
+
+Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH.
+Execution providers: LI.FI.
+Beta: trades are capped at $500.
+Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap.
+
+Read `selected`, `costs` and `selectionReason` before signing. `savingsVsRunnerUp` says how much
+the chosen route beat the next one by, so the routing decision is checkable rather than asserted.
+
+Sign the returned `transactions` in order from your own wallet. Axiom holds no key and cannot
+execute them, so nothing happens until you sign.
+
+Use https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze instead when you want the cost of a trade without the means to make it.

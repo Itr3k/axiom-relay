@@ -175,12 +175,138 @@ export class Axiom {
     return this.post<Record<string, unknown>>('/v1/request', { quote: route.quote, authorizations });
   }
 
+
+  /**
+   * Quote a swap and receive signable transactions.
+   *
+   * Returns calldata and nothing else. This client has no signing capability
+   * and no submission path -- deliberately, because the moment a library can
+   * both build and send a transaction, a bug in it can spend your money.
+   */
+  async quoteCryptoRoute(req: CryptoRouteRequest): Promise<CryptoRoute> {
+    return this.post<CryptoRoute>('/v1/crypto/quote', req as unknown as Record<string, unknown>);
+  }
+
+  /**
+   * Analyse a swap without receiving the means to make it.
+   *
+   * Identical economics to `quoteCryptoRoute`, with `transactions` null and a
+   * recommendation attached. Safe to expose to a model, since nothing it
+   * returns can be signed.
+   */
+  async analyzeCryptoRoute(req: CryptoRouteRequest): Promise<CryptoRoute> {
+    return this.post<CryptoRoute>('/v1/crypto/analyze', req as unknown as Record<string, unknown>);
+  }
+
   /** Convenience: route, sign and purchase in one call. */
   async buy(signer: X402Signer, capability: string, requirements: Parameters<Axiom['route']>[1] = {}) {
     const r = await this.route(capability, requirements);
     const result = await this.purchase(signer, r);
     return { route: r, result };
   }
+}
+
+
+// --- Axiom Crypto (Beta) -----------------------------------------------------
+
+/** A swap to route. Amounts are atomic-unit strings; a JSON number would lose precision. */
+export interface CryptoRouteRequest {
+  fromChain: number;
+  /** Defaults to fromChain. Cross-chain is disabled in beta. */
+  toChain?: number;
+  sellToken: string;
+  buyToken: string;
+  /** Atomic units of the sell token, as a decimal string. */
+  sellAmount: string;
+  /** The wallet that will sign. Axiom never receives its key. */
+  taker: string;
+  slippageBps?: number;
+  /** Refuse any route whose all-in cost exceeds this. */
+  maxTotalFeeBps?: number;
+  /** Refuse any route guaranteeing less than this, in buy-token atomic units. */
+  minBuyAmount?: string;
+  providers?: string[];
+  preference?: 'reliability' | 'latency';
+}
+
+/** One cost component, attributed to whoever receives it. */
+export interface CryptoCostLine {
+  amount: string;
+  token: string;
+  bps: number;
+}
+
+/**
+ * Costs, itemised.
+ *
+ * `providerFee` belongs to the execution provider and is NOT Axiom revenue.
+ * `axiomFee` is the only line Axiom receives. Providers frequently report one
+ * aggregate figure; adding these together and calling it Axiom's fee overstates
+ * it substantially.
+ */
+export interface CryptoCostDisclosure {
+  providerFee: CryptoCostLine | null;
+  axiomFee: CryptoCostLine | null;
+  protocolFee: CryptoCostLine | null;
+  bridgeFee: CryptoCostLine | null;
+  networkGas: CryptoCostLine | null;
+  slippage: {
+    toleranceBps: number;
+    worstCaseShortfall: string;
+    worstCaseBps: number;
+    guaranteedOutput: string;
+  };
+  /** Null when the provider does not report it. Unknown, not zero. */
+  priceImpactBps: number | null;
+  expectedOutput: { amount: string; token: string };
+  netAfterAllCosts: { amount: string; token: string; valueUsd: number | null };
+  totalEffectiveCostBps: number;
+  note: string;
+}
+
+/** A transaction for the caller to sign. Axiom cannot submit it. */
+export interface CryptoTransaction {
+  kind: 'approval' | 'swap' | 'bridge';
+  chainId: number;
+  to: string;
+  data: string;
+  value: string;
+  gasLimit: string | null;
+  description: string;
+}
+
+export interface CryptoRoute {
+  axiomVertical: 'crypto';
+  custody: 'non-custodial';
+  execution: 'caller-signs';
+  quoteId: string;
+  expiresAt: string;
+  request: Record<string, unknown>;
+  providersQueried: { provider: string; status: string; detail: string; latencyMs: number }[];
+  selected: {
+    provider: string;
+    tool: string;
+    expectedOutput: string;
+    minimumOutput: string;
+    netAfterAllCosts: string;
+    netValueUsd: number | null;
+    totalCostBps: number;
+    priceImpactBps: number | null;
+    estimatedGas: string | null;
+    transactionCount: number;
+    reliability: number;
+  };
+  axiomFee: { bps: number; amount: string; token: string; collection: string; note: string };
+  costDisclosure: CryptoCostDisclosure;
+  risks: { code: string; severity: string; detail: string }[];
+  simulation: { status: string; source: string; detail: string; providerDisagreement: boolean } | null;
+  selectionReason: string;
+  savingsVsRunnerUp: { atomic: string; bps: number; runnerUp: string | null };
+  alternatives: { provider: string; eligible: boolean; reason: string | null; netAfterAllCosts: string; totalCostBps: number }[];
+  /** Present on quote; always null on analyze. */
+  transactions: CryptoTransaction[] | null;
+  signing?: string;
+  recommendation?: { execute: boolean; confidence: string; concerns: string[]; summary: string };
 }
 
 export default Axiom;

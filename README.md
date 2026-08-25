@@ -1,10 +1,23 @@
-# Axiom Relay
+# Axiom by Elevated AI
 
-**An x402 smart router for autonomous agents.** Describe the capability you need
-instead of a URL; Axiom finds a provider that actually works, pays the seller
-directly, and returns the result.
+**The routing layer for AI spending.** Axiom is a non-custodial routing layer for
+autonomous AI agents. It helps agents discover and purchase paid machine
+services and route crypto transactions based on total cost, reliability,
+safety, and execution quality.
 
-Live on Base mainnet: `https://axiom-relay.reference-seller.workers.dev`
+Two capabilities, one product:
+
+| | what it does | status |
+|---|---|---|
+| **Axiom Services** | Finds, ranks and buys x402-paid APIs. The buyer's signed authorization is relayed to the seller. | Live on Base mainnet |
+| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Beta** on Base mainnet |
+
+Axiom never holds customer funds, never signs a customer transaction, and
+stores no customer key. In both capabilities the agent or user is the signer.
+
+Built by [Elevated AI](https://elevatedai.io).
+
+---
 
 ## Why this exists
 
@@ -146,3 +159,104 @@ testing. Current state is always readable at `/health`.
 ## Licence
 
 MIT
+
+---
+
+## Axiom Crypto (Beta)
+
+Describe a swap. Axiom queries execution providers, normalises every fee and
+gas cost, ranks routes on what you would actually receive, validates the
+calldata against what you asked for, and hands back transactions **your** wallet
+signs.
+
+Axiom never takes custody and never signs.
+
+### What it supports today
+
+| | |
+|---|---|
+| Network | Base mainnet |
+| Assets | USDC, WETH, ETH, USDT |
+| Execution provider | LI.FI |
+| Axiom fee | **15 bps (0.15%)** |
+| Max trade (beta) | **$500** |
+| Daily volume (beta) | **$5,000** |
+| Rate limit | 30 routes/min |
+
+The beta ceilings are risk limits while the routing model is validated against
+live markets, not product limits.
+
+### Fees are disclosed separately, always
+
+Execution providers often report one aggregate fee line. LI.FI's is 25 bps of
+its own plus Axiom's 15. Axiom splits them and attributes each to its
+recipient, because presenting a provider's fee as Axiom revenue would misstate
+both what you pay Axiom and what Axiom earns:
+
+```json
+"costDisclosure": {
+  "providerFee":  { "amount": "5000", "token": "USDC", "bps": 25 },
+  "axiomFee":     { "amount": "3000", "token": "USDC", "bps": 15 },
+  "networkGas":   { "amount": "...",  "token": "ETH" },
+  "slippage":     { "toleranceBps": 50, "guaranteedOutput": "...", "worstCaseBps": 50 },
+  "priceImpactBps": null,
+  "expectedOutput":   { "amount": "...", "token": "WETH" },
+  "netAfterAllCosts": { "amount": "...", "token": "WETH" },
+  "totalEffectiveCostBps": 87,
+  "note": "providerFee is charged by the execution provider and is not Axiom revenue."
+}
+```
+
+`priceImpactBps` is `null` rather than `0` when a provider does not report it.
+An unreported impact is unknown, not absent.
+
+### Quote a route
+
+```bash
+curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
+  -H 'content-type: application/json' \
+  -d '{
+    "fromChain": 8453,
+    "sellToken": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "buyToken":  "0x4200000000000000000000000000000000000006",
+    "sellAmount": "2000000",
+    "taker": "<your wallet>",
+    "slippageBps": 100
+  }'
+```
+
+You get back `selected`, `costDisclosure`, `selectionReason`,
+`savingsVsRunnerUp`, `alternatives`, and `transactions` — an exact-amount
+approval followed by the swap. Sign them in order from the taker wallet.
+
+### Analyse without receiving calldata
+
+`POST /v1/crypto/analyze` answers the same question and deliberately withholds
+the means to act: identical economics, `transactions: null`, plus a
+recommendation. Useful when an agent wants the cost of a trade without being
+handed the ability to make it.
+
+### What Axiom will refuse
+
+Route validation checks the provider's answer against what was asked, not
+against what the provider claims it did:
+
+- calldata built for a different chain
+- a sell amount that is not the one quoted
+- native value attached to an ERC-20 sale
+- an approval whose spender is not the route's allowance target
+- **unlimited approvals** — exact-amount only, unless an operator opts in
+- a floor implying wider slippage than you specified
+- a stale quote
+- a token that is not allowlisted
+- a route whose simulation fails
+
+### Signing model
+
+```
+intent → quote → inspect route → sign transaction → submit
+```
+
+Axiom performs the first three. Your wallet performs the last two. There is no
+execution endpoint, because execution is signing, and Axiom cannot sign.
+
