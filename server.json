@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.Itr3k/axiom-relay",
+  "name": "io.github.Itr3k/axiom-x402-payment-relay",
   "title": "Axiom Relay",
   "description": "Find and buy paid x402 APIs on Base, ranked by price and reliability. You sign; non-custodial.",
   "version": "0.1.0",

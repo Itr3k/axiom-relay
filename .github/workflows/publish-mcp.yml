@@ -1,7 +1,11 @@
 # Publishes the MCP server entry to the official registry.
 #
 # Authentication uses this repository's GitHub OIDC identity, which is what
-# grants the io.github.itr3k/* namespace. No token is stored anywhere.
+# grants the io.github.Itr3k/* namespace. No token is stored anywhere.
+#
+# The registry's search matches server *names* only -- descriptions are not
+# indexed -- so the published name deliberately carries the capability keywords
+# an agent would actually search for.
 name: Publish to MCP Registry
 
 on:
@@ -23,10 +27,20 @@ jobs:
         run: |
           curl -sSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/').tar.gz" \
             | tar xz mcp-publisher
-          ./mcp-publisher --version
 
       - name: Authenticate via GitHub OIDC
         run: ./mcp-publisher login github-oidc
 
       - name: Publish
         run: ./mcp-publisher publish
+
+      - name: Retire the superseded entry
+        # The first published name lacked the searchable keywords. Leaving it
+        # active would put two records for one endpoint in the registry.
+        continue-on-error: true
+        run: |
+          OLD=$(python3 -c "import urllib.parse;print(urllib.parse.quote('io.github.Itr3k/axiom-relay',safe=''))")
+          curl -sS -X PATCH "https://registry.modelcontextprotocol.io/v0.1/servers/$OLD/status" \
+            -H "Authorization: Bearer $(cat ~/.mcp_publisher_token | python3 -c 'import json,sys;print(json.load(sys.stdin)["token"])')" \
+            -H 'content-type: application/json' \
+            -d '{"status":"deprecated","statusMessage":"Superseded by io.github.Itr3k/axiom-x402-payment-relay (same endpoint, searchable name)."}'
