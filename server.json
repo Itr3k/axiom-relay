@@ -3,8 +3,8 @@
   "name": "io.github.Itr3k/axiom-x402-payment-crypto-router",
   "title": "Axiom by Elevated AI",
   "description": "Buy paid x402 APIs and route non-custodial crypto swaps on Base. You sign; Axiom holds no funds.",
-  "version": "0.2.0",
-  "websiteUrl": "https://github.com/Itr3k/axiom-relay",
+  "version": "0.3.0",
+  "websiteUrl": "https://axiom.elevatedai.io",
   "repository": {
     "url": "https://github.com/Itr3k/axiom-relay",
     "source": "github"

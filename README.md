@@ -15,6 +15,13 @@ Two capabilities, one product:
 Axiom never holds customer funds, never signs a customer transaction, and
 stores no customer key. In both capabilities the agent or user is the signer.
 
+**Canonical site:** <https://axiom.elevatedai.io> · **API origin:**
+`axiom-relay.reference-seller.workers.dev`
+
+These are deliberately separate. The canonical site mirrors every machine
+contract over GET and serves no execution route, so documents reference it
+while requests execute against the runtime.
+
 Built by [Elevated AI](https://elevatedai.io).
 
 ---

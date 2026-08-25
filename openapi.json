@@ -12,9 +12,14 @@
     },
     "servers": [
         {
-            "url": "https://axiom-relay.reference-seller.workers.dev"
+            "url": "https://axiom-relay.reference-seller.workers.dev",
+            "description": "Execution / API runtime"
         }
     ],
+    "externalDocs": {
+        "url": "https://axiom.elevatedai.io",
+        "description": "Axiom by Elevated AI \u2014 documentation and canonical identity"
+    },
     "security": [],
     "x-x402": {
         "version": 2,

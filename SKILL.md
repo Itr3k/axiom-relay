@@ -1,7 +1,13 @@
 ---
 name: axiom-relay
 description: Buy an x402-paid API resource when you do not know which provider to use, or want price and reliability considered. Axiom discovers providers, checks they are live, ranks them, pays the seller directly, and returns the result.
+homepage: https://axiom.elevatedai.io
 ---
+
+> **Axiom by Elevated AI** — https://axiom.elevatedai.io
+> Documentation and identity live at the canonical site; the API origin below is
+> where requests execute. They are deliberately separate: the canonical host
+> mirrors documents over GET and serves no execution route.
 
 # Axiom Relay
 

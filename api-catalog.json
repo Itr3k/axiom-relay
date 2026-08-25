@@ -1,29 +1,29 @@
 {
     "linkset": [
         {
-            "anchor": "https://axiom-relay.reference-seller.workers.dev/.well-known/api-catalog",
+            "anchor": "https://axiom.elevatedai.io/.well-known/api-catalog",
             "item": [
                 {
-                    "href": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+                    "href": "https://axiom.elevatedai.io/openapi.json",
                     "type": "application/openapi+json",
                     "title": "Axiom by Elevated AI \u2014 OpenAPI 3.1 description"
                 },
                 {
-                    "href": "https://axiom-relay.reference-seller.workers.dev/.well-known/x402",
+                    "href": "https://axiom.elevatedai.io/.well-known/x402",
                     "type": "application/json",
                     "title": "Axiom by Elevated AI \u2014 x402 service descriptor"
                 }
             ],
             "service-doc": [
                 {
-                    "href": "https://axiom-relay.reference-seller.workers.dev/SKILL.md",
+                    "href": "https://axiom.elevatedai.io/SKILL.md",
                     "type": "text/markdown",
                     "title": "Agent usage guidance"
                 }
             ],
             "service-desc": [
                 {
-                    "href": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+                    "href": "https://axiom.elevatedai.io/openapi.json",
                     "type": "application/openapi+json"
                 }
             ],

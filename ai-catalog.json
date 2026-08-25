@@ -9,7 +9,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:server:mcp",
             "displayName": "Axiom by Elevated AI \u2014 MCP server",
             "type": "application/mcp-server-card+json",
-            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json",
+            "url": "https://axiom.elevatedai.io/.well-known/mcp.json",
             "description": "Model Context Protocol server for discovering and purchasing paid machine services, and for preparing non-custodial crypto routes. Returns transactions the caller signs; holds no keys.",
             "capabilities": [
                 "find_paid_resource",
@@ -36,7 +36,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:agent:axiom",
             "displayName": "Axiom by Elevated AI \u2014 A2A agent card",
             "type": "application/a2a-agent-card+json",
-            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json",
+            "url": "https://axiom.elevatedai.io/.well-known/agent-card.json",
             "description": "Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.",
             "representativeQueries": [
                 "which agent can route a payment for me",
@@ -55,7 +55,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:api:openapi",
             "displayName": "Axiom by Elevated AI \u2014 OpenAPI",
             "type": "application/openapi+json",
-            "url": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+            "url": "https://axiom.elevatedai.io/openapi.json",
             "description": "OpenAPI 3.1 description of every Axiom endpoint: service quoting and relay, capability routing, and non-custodial crypto quoting and analysis.",
             "representativeQueries": [
                 "what HTTP API can route an agent payment",
@@ -72,7 +72,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:skill:axiom",
             "displayName": "Axiom by Elevated AI \u2014 agent skill",
             "type": "text/markdown",
-            "url": "https://axiom-relay.reference-seller.workers.dev/SKILL.md",
+            "url": "https://axiom.elevatedai.io/SKILL.md",
             "description": "Operational guidance for an agent deciding when and how to use Axiom: routing a purchase, reading a quote, and handling quota or route failures.",
             "representativeQueries": [
                 "how should an agent decide to buy a paid resource",
@@ -88,7 +88,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:api:x402-descriptor",
             "displayName": "Axiom by Elevated AI \u2014 x402 service descriptor",
             "type": "application/json",
-            "url": "https://axiom-relay.reference-seller.workers.dev/.well-known/x402",
+            "url": "https://axiom.elevatedai.io/.well-known/x402",
             "description": "Machine-readable x402 v2 service descriptor: supported networks, schemes, fee policy and the capabilities Axiom exposes.",
             "representativeQueries": [
                 "x402 payment routing service",
@@ -105,7 +105,7 @@
             "identifier": "urn:air:axiom.elevatedai.io:tool:crypto-routing",
             "displayName": "Axiom by Elevated AI \u2014 crypto routing (beta)",
             "type": "application/openapi+json",
-            "url": "https://axiom-relay.reference-seller.workers.dev/openapi.json",
+            "url": "https://axiom.elevatedai.io/openapi.json",
             "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Execution via LI.FI. Axiom fee 15 bps; provider fees, gas and slippage are disclosed separately. Status: beta.",
             "capabilities": [
                 "quote_crypto_swap",

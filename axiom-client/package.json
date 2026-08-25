@@ -50,7 +50,7 @@
     "type": "git",
     "url": "git+https://github.com/Itr3k/axiom-relay.git"
   },
-  "homepage": "https://github.com/Itr3k/axiom-relay#readme",
+  "homepage": "https://axiom.elevatedai.io",
   "engines": {
     "node": ">=20"
   },

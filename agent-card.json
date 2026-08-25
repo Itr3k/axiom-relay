@@ -38,7 +38,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }
@@ -55,7 +55,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }
@@ -73,7 +73,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/route",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/route?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }
@@ -90,7 +90,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }
@@ -109,7 +109,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/request",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/request?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }
@@ -126,7 +126,7 @@
             ],
             "supportedInterfaces": [
                 {
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote?source=a2a",
                     "protocolBinding": "HTTP+JSON",
                     "protocolVersion": "1.0"
                 }

@@ -1,3 +1,11 @@
+# Axiom by Elevated AI
+
+> Canonical site: https://axiom.elevatedai.io
+> API origin:     https://axiom-relay.reference-seller.workers.dev
+> Parent:         Elevated AI (https://elevatedai.io)
+>
+> Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.
+
 # Axiom Relay
 
 > An x402 smart router for autonomous agents. Give it a capability rather than a
