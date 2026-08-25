@@ -1,1 +1,90 @@
-{"id":"axiom-relay","name":"Axiom Relay","description":"x402 smart router for autonomous agents. Given a capability rather than a URL, it discovers x402 providers, validates that they are live, ranks them on price and reliability, pays the seller directly, and returns the result. Non-custodial: the buyer pays the seller, and Axiom holds no key and takes no custody. Routing fee 3% capped at $0.50, waived when too small to settle.","version":"0.1.0","provider":{"name":"Axiom Relay","homepage":"https://axiom-relay.reference-seller.workers.dev"},"capabilities":{"streaming":false,"pushNotifications":false,"extendedAgentCard":false},"interfaces":[{"type":"http+json/rest","url":"https://axiom-relay.reference-seller.workers.dev"}],"skills":[{"id":"discover-paid-provider","name":"Discover an x402 provider for a capability","description":"Search x402 discovery catalogues for providers of a described capability, validate that each candidate still answers a well-formed x402 challenge, and rank them deterministically on price, observed reliability, latency and validation freshness. Executes no payment.","tags":["x402","provider-discovery","price-aware-routing","reliability-aware-routing"],"interfaces":[{"type":"http+json/rest","url":"https://axiom-relay.reference-seller.workers.dev/v1/route"}]},{"id":"quote-paid-resource","name":"Quote a known x402 resource","description":"Probe a specific x402 resource URL, confirm it is reachable and x402 v2 compatible, and return the seller price, the Axiom routing fee, and the total. Executes no payment.","tags":["x402","quote","paid-resource-acquisition"],"interfaces":[{"type":"http+json/rest","url":"https://axiom-relay.reference-seller.workers.dev/v1/quote"}]},{"id":"purchase-paid-resource","name":"Purchase an x402 resource","description":"Execute a quoted purchase using buyer-signed x402 authorisations. The seller authorisation is relayed unmodified and settled by the seller; Axiom settles only its own routing fee, and only after the resource is delivered. Falls back to the next ranked provider when the previous one provably did not take payment.","tags":["x402","machine-commerce","api-purchasing","safe-fallback","non-custodial"],"interfaces":[{"type":"http+json/rest","url":"https://axiom-relay.reference-seller.workers.dev/v1/request"}]},{"id":"check-provider-health","name":"Check a provider","description":"Report whether a specific x402 resource is currently reachable, answers a valid challenge, and what it charges, without purchasing anything.","tags":["x402","provider-health","validation"],"interfaces":[{"type":"http+json/rest","url":"https://axiom-relay.reference-seller.workers.dev/v1/quote"}]}]}
+{
+    "id": "axiom-relay",
+    "name": "Axiom Relay",
+    "description": "x402 smart router for autonomous agents. Given a capability rather than a URL, it discovers x402 providers, validates that they are live, ranks them on price and reliability, pays the seller directly, and returns the result. Non-custodial: the buyer pays the seller, and Axiom holds no key and takes no custody. Routing fee 3% capped at $0.50, waived when too small to settle.",
+    "version": "0.1.0",
+    "provider": {
+        "name": "Axiom Relay",
+        "homepage": "https://axiom-relay.reference-seller.workers.dev"
+    },
+    "capabilities": {
+        "streaming": false,
+        "pushNotifications": false,
+        "extendedAgentCard": false
+    },
+    "interfaces": [
+        {
+            "type": "http+json/rest",
+            "url": "https://axiom-relay.reference-seller.workers.dev"
+        }
+    ],
+    "skills": [
+        {
+            "id": "discover-paid-provider",
+            "name": "Discover an x402 provider for a capability",
+            "description": "Search x402 discovery catalogues for providers of a described capability, validate that each candidate still answers a well-formed x402 challenge, and rank them deterministically on price, observed reliability, latency and validation freshness. Executes no payment.",
+            "tags": [
+                "x402",
+                "provider-discovery",
+                "price-aware-routing",
+                "reliability-aware-routing"
+            ],
+            "interfaces": [
+                {
+                    "type": "http+json/rest",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/route"
+                }
+            ]
+        },
+        {
+            "id": "quote-paid-resource",
+            "name": "Quote a known x402 resource",
+            "description": "Probe a specific x402 resource URL, confirm it is reachable and x402 v2 compatible, and return the seller price, the Axiom routing fee, and the total. Executes no payment.",
+            "tags": [
+                "x402",
+                "quote",
+                "paid-resource-acquisition"
+            ],
+            "interfaces": [
+                {
+                    "type": "http+json/rest",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote"
+                }
+            ]
+        },
+        {
+            "id": "purchase-paid-resource",
+            "name": "Purchase an x402 resource",
+            "description": "Execute a quoted purchase using buyer-signed x402 authorisations. The seller authorisation is relayed unmodified and settled by the seller; Axiom settles only its own routing fee, and only after the resource is delivered. Falls back to the next ranked provider when the previous one provably did not take payment.",
+            "tags": [
+                "x402",
+                "machine-commerce",
+                "api-purchasing",
+                "safe-fallback",
+                "non-custodial"
+            ],
+            "interfaces": [
+                {
+                    "type": "http+json/rest",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/request"
+                }
+            ]
+        },
+        {
+            "id": "check-provider-health",
+            "name": "Check a provider",
+            "description": "Report whether a specific x402 resource is currently reachable, answers a valid challenge, and what it charges, without purchasing anything.",
+            "tags": [
+                "x402",
+                "provider-health",
+                "validation"
+            ],
+            "interfaces": [
+                {
+                    "type": "http+json/rest",
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote"
+                }
+            ]
+        }
+    ]
+}

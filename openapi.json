@@ -1,1 +1,882 @@
-{"openapi":"3.1.0","info":{"title":"Axiom Relay","version":"0.1.0","summary":"Non-custodial x402 v2 routing relay for autonomous agents.","description":"Axiom routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."},"servers":[{"url":"https://axiom-relay.reference-seller.workers.dev"}],"x-x402":{"version":2,"networks":["eip155:8453","eip155:84532"],"schemes":["exact"],"feeBasisPoints":300,"custody":"non-custodial","modes":["direct","capability"],"discovery":"https://axiom-relay.reference-seller.workers.dev/.well-known/x402"},"paths":{"/health":{"get":{"summary":"Service health and version","operationId":"health","responses":{"200":{"description":"Healthy","content":{"application/json":{"schema":{"type":"object"}}}},"503":{"description":"Degraded or disabled"}}}},"/.well-known/x402":{"get":{"summary":"Machine-readable service descriptor","operationId":"discovery","responses":{"200":{"description":"Service descriptor"}}}},"/v1/discovery":{"get":{"summary":"Bazaar-style resource listing for this relay","operationId":"listResources","responses":{"200":{"description":"Resource list"}}}},"/v1/route":{"post":{"summary":"Resolve a capability into a ranked provider selection","description":"Takes a capability description instead of a URL. Searches x402 discovery catalogues, validates candidates against a live x402 challenge, ranks them deterministically, and returns a signed quote covering the selected provider and its fallbacks. Executes no payment. Requires AXIOM_SMART_ROUTING_ENABLED.","operationId":"route","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["capability"],"properties":{"capability":{"type":"string","description":"What the agent needs, in words. Minimum 3 characters."},"requirements":{"type":"object","properties":{"maxPriceAtomic":{"type":"string","description":"Exclude providers above this seller price, in atomic units."},"network":{"type":"string","description":"CAIP-2 network the provider must settle on."},"asset":{"type":"string","description":"Token contract the provider must price in."}}}}}}}},"responses":{"200":{"description":"Ranked candidates plus a signed multi-candidate quote"},"404":{"description":"No usable provider found for the capability"},"422":{"description":"Selected provider is below the break-even threshold"},"501":{"description":"Capability routing is disabled on this deployment"}}}},"/v1/quote":{"post":{"summary":"Quote a destination without paying","description":"Probes the destination, confirms x402 v2 compatibility, and returns the seller requirement, Axiom's fee requirement, and a signed quote token. Executes no payment.","operationId":"quote","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["url"],"properties":{"url":{"type":"string","format":"uri"},"method":{"type":"string","enum":["GET","HEAD","POST","PUT","PATCH","DELETE"],"default":"GET"},"headers":{"type":"object","additionalProperties":{"type":"string"}},"body":{"type":"string"}}}}}},"responses":{"200":{"description":"Quote issued","content":{"application/json":{"schema":{"type":"object","required":["quote","expiresAt","downstream","axiomFee","total"],"properties":{"quote":{"type":"string"},"quoteId":{"type":"string"},"expiresAt":{"type":"string","format":"date-time"},"downstream":{"type":"object","required":["scheme","network","asset","amount","payTo","maxTimeoutSeconds"],"properties":{"scheme":{"type":"string","enum":["exact"]},"network":{"type":"string","description":"CAIP-2 network identifier, e.g. eip155:84532"},"asset":{"type":"string","description":"Token contract address"},"amount":{"type":"string","description":"Atomic units as a decimal string"},"payTo":{"type":"string"},"maxTimeoutSeconds":{"type":"integer"},"extra":{"type":"object","additionalProperties":true}}},"axiomFee":{"type":"object","required":["scheme","network","asset","amount","payTo","maxTimeoutSeconds"],"properties":{"scheme":{"type":"string","enum":["exact"]},"network":{"type":"string","description":"CAIP-2 network identifier, e.g. eip155:84532"},"asset":{"type":"string","description":"Token contract address"},"amount":{"type":"string","description":"Atomic units as a decimal string"},"payTo":{"type":"string"},"maxTimeoutSeconds":{"type":"integer"},"extra":{"type":"object","additionalProperties":true}}},"total":{"type":"object"}}}}}},"403":{"description":"Destination rejected by safety policy","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"413":{"description":"Request body too large","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"422":{"description":"Destination is not x402-v2 compatible","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"429":{"description":"Rate limited","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"502":{"description":"Destination unreachable","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"503":{"description":"Relay disabled or misconfigured","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"504":{"description":"Destination timed out","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}}}}},"/v1/request":{"post":{"summary":"Execute a quoted request with payment","description":"Relays the seller authorisation verbatim and settles only Axiom's fee, and only after a successful downstream response. Omitting PAYMENT-SIGNATURE returns a 402 challenge for the fee leg.","operationId":"request","parameters":[{"name":"PAYMENT-SIGNATURE","in":"header","required":false,"schema":{"type":"string"},"description":"base64 x402 v2 PaymentPayload authorising Axiom's routing fee. Omit to receive a 402 challenge."},{"name":"X-AXIOM-DOWNSTREAM-PAYMENT","in":"header","required":true,"schema":{"type":"string"},"description":"base64 x402 v2 PaymentPayload authorising the seller. Relayed unmodified."},{"name":"authorizations","in":"header","required":false,"schema":{"type":"string"},"description":"Not a header: for a route quote, send { quote, authorizations: [{ seller, fee }, ...] } in the JSON body, one pair per candidate. Only the pair for the provider that succeeds is settled."},{"name":"Idempotency-Key","in":"header","required":false,"schema":{"type":"string"},"description":"Reusing a key returns 409 rather than paying twice."}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["quote","url"],"properties":{"quote":{"type":"string"},"url":{"type":"string","format":"uri"},"method":{"type":"string"},"headers":{"type":"object","additionalProperties":{"type":"string"}},"body":{"type":"string"}}}}}},"responses":{"200":{"description":"Downstream response returned and fee settled"},"400":{"description":"Malformed request or authorisation mismatch","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"402":{"description":"Fee authorisation required or invalid"},"403":{"description":"Destination rejected by safety policy","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"409":{"description":"Replayed authorisation or reused Idempotency-Key","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"410":{"description":"Quote expired","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"502":{"description":"Downstream failed; no fee charged","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"503":{"description":"Relay disabled or a guard is unavailable","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}},"504":{"description":"Destination timed out","content":{"application/json":{"schema":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}}}}}}},"/v1/metrics":{"get":{"summary":"Operational counters","operationId":"metrics","security":[{"adminToken":[]}],"responses":{"200":{"description":"Counters"},"401":{"description":"Missing or invalid admin token"}}}}},"components":{"schemas":{"PaymentRequirements":{"type":"object","required":["scheme","network","asset","amount","payTo","maxTimeoutSeconds"],"properties":{"scheme":{"type":"string","enum":["exact"]},"network":{"type":"string","description":"CAIP-2 network identifier, e.g. eip155:84532"},"asset":{"type":"string","description":"Token contract address"},"amount":{"type":"string","description":"Atomic units as a decimal string"},"payTo":{"type":"string"},"maxTimeoutSeconds":{"type":"integer"},"extra":{"type":"object","additionalProperties":true}}},"Error":{"type":"object","required":["error","code","retryable"],"properties":{"error":{"type":"string"},"code":{"type":"string"},"detail":{"type":"string"},"retryable":{"type":"boolean"}}}},"securitySchemes":{"adminToken":{"type":"http","scheme":"bearer"}}}}
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Axiom Relay",
+        "version": "0.1.0",
+        "summary": "Non-custodial x402 v2 routing relay for autonomous agents.",
+        "description": "Axiom routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."
+    },
+    "servers": [
+        {
+            "url": "https://axiom-relay.reference-seller.workers.dev"
+        }
+    ],
+    "x-x402": {
+        "version": 2,
+        "networks": [
+            "eip155:8453",
+            "eip155:84532"
+        ],
+        "schemes": [
+            "exact"
+        ],
+        "feeBasisPoints": 300,
+        "custody": "non-custodial",
+        "modes": [
+            "direct",
+            "capability"
+        ],
+        "discovery": "https://axiom-relay.reference-seller.workers.dev/.well-known/x402"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "Service health and version",
+                "operationId": "health",
+                "responses": {
+                    "200": {
+                        "description": "Healthy",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Degraded or disabled"
+                    }
+                }
+            }
+        },
+        "/.well-known/x402": {
+            "get": {
+                "summary": "Machine-readable service descriptor",
+                "operationId": "discovery",
+                "responses": {
+                    "200": {
+                        "description": "Service descriptor"
+                    }
+                }
+            }
+        },
+        "/v1/discovery": {
+            "get": {
+                "summary": "Bazaar-style resource listing for this relay",
+                "operationId": "listResources",
+                "responses": {
+                    "200": {
+                        "description": "Resource list"
+                    }
+                }
+            }
+        },
+        "/v1/route": {
+            "post": {
+                "summary": "Resolve a capability into a ranked provider selection",
+                "description": "Takes a capability description instead of a URL. Searches x402 discovery catalogues, validates candidates against a live x402 challenge, ranks them deterministically, and returns a signed quote covering the selected provider and its fallbacks. Executes no payment. Requires AXIOM_SMART_ROUTING_ENABLED.",
+                "operationId": "route",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "capability"
+                                ],
+                                "properties": {
+                                    "capability": {
+                                        "type": "string",
+                                        "description": "What the agent needs, in words. Minimum 3 characters."
+                                    },
+                                    "requirements": {
+                                        "type": "object",
+                                        "properties": {
+                                            "maxPriceAtomic": {
+                                                "type": "string",
+                                                "description": "Exclude providers above this seller price, in atomic units."
+                                            },
+                                            "network": {
+                                                "type": "string",
+                                                "description": "CAIP-2 network the provider must settle on."
+                                            },
+                                            "asset": {
+                                                "type": "string",
+                                                "description": "Token contract the provider must price in."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ranked candidates plus a signed multi-candidate quote"
+                    },
+                    "404": {
+                        "description": "No usable provider found for the capability"
+                    },
+                    "422": {
+                        "description": "Selected provider is below the break-even threshold"
+                    },
+                    "501": {
+                        "description": "Capability routing is disabled on this deployment"
+                    }
+                }
+            }
+        },
+        "/v1/quote": {
+            "post": {
+                "summary": "Quote a destination without paying",
+                "description": "Probes the destination, confirms x402 v2 compatibility, and returns the seller requirement, Axiom's fee requirement, and a signed quote token. Executes no payment.",
+                "operationId": "quote",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "GET",
+                                            "HEAD",
+                                            "POST",
+                                            "PUT",
+                                            "PATCH",
+                                            "DELETE"
+                                        ],
+                                        "default": "GET"
+                                    },
+                                    "headers": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quote issued",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "quote",
+                                        "expiresAt",
+                                        "downstream",
+                                        "axiomFee",
+                                        "total"
+                                    ],
+                                    "properties": {
+                                        "quote": {
+                                            "type": "string"
+                                        },
+                                        "quoteId": {
+                                            "type": "string"
+                                        },
+                                        "expiresAt": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "downstream": {
+                                            "type": "object",
+                                            "required": [
+                                                "scheme",
+                                                "network",
+                                                "asset",
+                                                "amount",
+                                                "payTo",
+                                                "maxTimeoutSeconds"
+                                            ],
+                                            "properties": {
+                                                "scheme": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "exact"
+                                                    ]
+                                                },
+                                                "network": {
+                                                    "type": "string",
+                                                    "description": "CAIP-2 network identifier, e.g. eip155:84532"
+                                                },
+                                                "asset": {
+                                                    "type": "string",
+                                                    "description": "Token contract address"
+                                                },
+                                                "amount": {
+                                                    "type": "string",
+                                                    "description": "Atomic units as a decimal string"
+                                                },
+                                                "payTo": {
+                                                    "type": "string"
+                                                },
+                                                "maxTimeoutSeconds": {
+                                                    "type": "integer"
+                                                },
+                                                "extra": {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                }
+                                            }
+                                        },
+                                        "axiomFee": {
+                                            "type": "object",
+                                            "required": [
+                                                "scheme",
+                                                "network",
+                                                "asset",
+                                                "amount",
+                                                "payTo",
+                                                "maxTimeoutSeconds"
+                                            ],
+                                            "properties": {
+                                                "scheme": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "exact"
+                                                    ]
+                                                },
+                                                "network": {
+                                                    "type": "string",
+                                                    "description": "CAIP-2 network identifier, e.g. eip155:84532"
+                                                },
+                                                "asset": {
+                                                    "type": "string",
+                                                    "description": "Token contract address"
+                                                },
+                                                "amount": {
+                                                    "type": "string",
+                                                    "description": "Atomic units as a decimal string"
+                                                },
+                                                "payTo": {
+                                                    "type": "string"
+                                                },
+                                                "maxTimeoutSeconds": {
+                                                    "type": "integer"
+                                                },
+                                                "extra": {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                }
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Destination rejected by safety policy",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "413": {
+                        "description": "Request body too large",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Destination is not x402-v2 compatible",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limited",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Destination unreachable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Relay disabled or misconfigured",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "504": {
+                        "description": "Destination timed out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/request": {
+            "post": {
+                "summary": "Execute a quoted request with payment",
+                "description": "Relays the seller authorisation verbatim and settles only Axiom's fee, and only after a successful downstream response. Omitting PAYMENT-SIGNATURE returns a 402 challenge for the fee leg.",
+                "operationId": "request",
+                "parameters": [
+                    {
+                        "name": "PAYMENT-SIGNATURE",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "base64 x402 v2 PaymentPayload authorising Axiom's routing fee. Omit to receive a 402 challenge."
+                    },
+                    {
+                        "name": "X-AXIOM-DOWNSTREAM-PAYMENT",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "base64 x402 v2 PaymentPayload authorising the seller. Relayed unmodified."
+                    },
+                    {
+                        "name": "authorizations",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Not a header: for a route quote, send { quote, authorizations: [{ seller, fee }, ...] } in the JSON body, one pair per candidate. Only the pair for the provider that succeeds is settled."
+                    },
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Reusing a key returns 409 rather than paying twice."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "quote",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "quote": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "method": {
+                                        "type": "string"
+                                    },
+                                    "headers": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Downstream response returned and fee settled"
+                    },
+                    "400": {
+                        "description": "Malformed request or authorisation mismatch",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Fee authorisation required or invalid"
+                    },
+                    "403": {
+                        "description": "Destination rejected by safety policy",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Replayed authorisation or reused Idempotency-Key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Quote expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Downstream failed; no fee charged",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Relay disabled or a guard is unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "504": {
+                        "description": "Destination timed out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "error",
+                                        "code",
+                                        "retryable"
+                                    ],
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "code": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "type": "string"
+                                        },
+                                        "retryable": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/metrics": {
+            "get": {
+                "summary": "Operational counters",
+                "operationId": "metrics",
+                "security": [
+                    {
+                        "adminToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Counters"
+                    },
+                    "401": {
+                        "description": "Missing or invalid admin token"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PaymentRequirements": {
+                "type": "object",
+                "required": [
+                    "scheme",
+                    "network",
+                    "asset",
+                    "amount",
+                    "payTo",
+                    "maxTimeoutSeconds"
+                ],
+                "properties": {
+                    "scheme": {
+                        "type": "string",
+                        "enum": [
+                            "exact"
+                        ]
+                    },
+                    "network": {
+                        "type": "string",
+                        "description": "CAIP-2 network identifier, e.g. eip155:84532"
+                    },
+                    "asset": {
+                        "type": "string",
+                        "description": "Token contract address"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "description": "Atomic units as a decimal string"
+                    },
+                    "payTo": {
+                        "type": "string"
+                    },
+                    "maxTimeoutSeconds": {
+                        "type": "integer"
+                    },
+                    "extra": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "required": [
+                    "error",
+                    "code",
+                    "retryable"
+                ],
+                "properties": {
+                    "error": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "retryable": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "adminToken": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
