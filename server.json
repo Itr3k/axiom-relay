@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.itr3k/axiom-relay",
+  "title": "Axiom Relay",
+  "description": "Buy paid x402 APIs on Base. Describe a capability; Axiom finds live providers, ranks them on price and reliability, and relays your own signed payment. Non-custodial.",
+  "version": "0.1.0",
+  "websiteUrl": "https://github.com/Itr3k/axiom-relay",
+  "repository": {
+    "url": "https://github.com/Itr3k/axiom-relay",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://axiom-relay.reference-seller.workers.dev/mcp"
+    }
+  ]
+}
