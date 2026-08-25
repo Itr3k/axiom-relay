@@ -1,22 +1,28 @@
 {
-    "id": "axiom-relay",
     "name": "Axiom Relay",
     "description": "x402 smart router for autonomous agents. Given a capability rather than a URL, it discovers x402 providers, validates that they are live, ranks them on price and reliability, pays the seller directly, and returns the result. Non-custodial: the buyer pays the seller, and Axiom holds no key and takes no custody. Routing fee 3% capped at $0.50, waived when too small to settle.",
     "version": "0.1.0",
     "provider": {
-        "name": "Axiom Relay",
-        "homepage": "https://axiom-relay.reference-seller.workers.dev"
+        "organization": "Axiom Relay",
+        "url": "https://axiom-relay.reference-seller.workers.dev"
     },
     "capabilities": {
         "streaming": false,
         "pushNotifications": false,
         "extendedAgentCard": false
     },
-    "interfaces": [
+    "supportedInterfaces": [
         {
-            "type": "http+json/rest",
-            "url": "https://axiom-relay.reference-seller.workers.dev"
+            "url": "https://axiom-relay.reference-seller.workers.dev",
+            "protocolBinding": "HTTP+JSON",
+            "protocolVersion": "1.0"
         }
+    ],
+    "defaultInputModes": [
+        "application/json"
+    ],
+    "defaultOutputModes": [
+        "application/json"
     ],
     "skills": [
         {
@@ -29,10 +35,11 @@
                 "price-aware-routing",
                 "reliability-aware-routing"
             ],
-            "interfaces": [
+            "supportedInterfaces": [
                 {
-                    "type": "http+json/rest",
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/route"
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/route",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
                 }
             ]
         },
@@ -45,10 +52,11 @@
                 "quote",
                 "paid-resource-acquisition"
             ],
-            "interfaces": [
+            "supportedInterfaces": [
                 {
-                    "type": "http+json/rest",
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote"
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
                 }
             ]
         },
@@ -63,10 +71,11 @@
                 "safe-fallback",
                 "non-custodial"
             ],
-            "interfaces": [
+            "supportedInterfaces": [
                 {
-                    "type": "http+json/rest",
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/request"
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/request",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
                 }
             ]
         },
@@ -79,10 +88,11 @@
                 "provider-health",
                 "validation"
             ],
-            "interfaces": [
+            "supportedInterfaces": [
                 {
-                    "type": "http+json/rest",
-                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote"
+                    "url": "https://axiom-relay.reference-seller.workers.dev/v1/quote",
+                    "protocolBinding": "HTTP+JSON",
+                    "protocolVersion": "1.0"
                 }
             ]
         }
