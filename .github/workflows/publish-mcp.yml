@@ -31,16 +31,25 @@ jobs:
       - name: Authenticate via GitHub OIDC
         run: ./mcp-publisher login github-oidc
 
-      - name: Publish
-        run: ./mcp-publisher publish
-
-      - name: Retire the superseded entry
-        # The first published name lacked the searchable keywords. Leaving it
-        # active would put two records for one endpoint in the registry.
+      # The registry allows one server per remote URL, so a superseded name must
+      # be released before the replacement can claim the same endpoint.
+      - name: Release the superseded entry
         continue-on-error: true
         run: |
+          TOKEN=$(python3 - <<'PY'
+          import json, pathlib
+          raw = pathlib.Path.home().joinpath('.mcp_publisher_token').read_text().strip()
+          try:
+              print(json.loads(raw)['token'])
+          except Exception:
+              print(raw)
+          PY
+          )
           OLD=$(python3 -c "import urllib.parse;print(urllib.parse.quote('io.github.Itr3k/axiom-relay',safe=''))")
           curl -sS -X PATCH "https://registry.modelcontextprotocol.io/v0.1/servers/$OLD/status" \
-            -H "Authorization: Bearer $(cat ~/.mcp_publisher_token | python3 -c 'import json,sys;print(json.load(sys.stdin)["token"])')" \
-            -H 'content-type: application/json' \
-            -d '{"status":"deprecated","statusMessage":"Superseded by io.github.Itr3k/axiom-x402-payment-relay (same endpoint, searchable name)."}'
+            -H "Authorization: Bearer $TOKEN" -H 'content-type: application/json' \
+            -d '{"status":"deleted","statusMessage":"Superseded by io.github.Itr3k/axiom-x402-payment-relay (same endpoint, searchable name)."}'
+          echo
+
+      - name: Publish
+        run: ./mcp-publisher publish
