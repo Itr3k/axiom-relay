@@ -1,0 +1,42 @@
+# Smithery import descriptor -- https://smithery.ai/docs
+#
+# Axiom runs on Cloudflare Workers and is not deployed through Smithery's
+# runtime, so this points at the existing endpoint rather than describing a
+# build.
+runtime: "remote"
+remote:
+  url: "https://axiom-relay.reference-seller.workers.dev/mcp"
+  transport: "streamable-http"
+
+metadata:
+  name: "Axiom Relay"
+  description: "Buy any x402-paid API without knowing the provider. Describe a capability and Axiom discovers live providers, ranks them on price and reliability, and relays your own signed payment to the seller. Non-custodial: Axiom never holds funds. Fee 3% capped at $0.50, waived when too small to settle."
+  homepage: "https://axiom-relay.reference-seller.workers.dev"
+  repository: "https://github.com/Itr3k/axiom-relay"
+  license: "MIT"
+  categories:
+    - "payments"
+    - "web3"
+    - "api-discovery"
+    - "agent-infrastructure"
+  keywords:
+    - "x402"
+    - "agent-payments"
+    - "agentic-commerce"
+    - "micropayments"
+    - "usdc"
+    - "base"
+    - "non-custodial"
+    - "provider-discovery"
+    - "smart-routing"
+    - "paid-api"
+
+tools:
+  - name: "find_paid_resource"
+    description: "Find x402 API providers for a described capability, ranked on price and reliability. Executes no payment."
+  - name: "quote_paid_resource"
+    description: "Quote a specific x402 resource URL: seller price, Axiom fee, and the requirements to sign."
+  - name: "purchase_paid_resource"
+    description: "Execute a quoted purchase using authorizations you signed with your own wallet."
+  - name: "check_provider"
+    description: "Check whether a specific x402 endpoint is live and what it currently charges."
