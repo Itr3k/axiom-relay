@@ -1,0 +1,148 @@
+# Axiom Relay
+
+**An x402 smart router for autonomous agents.** Describe the capability you need
+instead of a URL; Axiom finds a provider that actually works, pays the seller
+directly, and returns the result.
+
+Live on Base mainnet: `https://axiom-relay.reference-seller.workers.dev`
+
+## Why this exists
+
+Most x402 tooling assumes the agent already knows the provider's URL. In
+practice it doesn't — and roughly **13% of advertised x402 providers do not
+answer a valid challenge** when actually called (measured across the live
+Coinbase Bazaar catalogue). Axiom absorbs that problem.
+
+```
+intent -> discover candidates -> validate -> rank -> pay -> return result
+```
+
+## Pricing
+
+| | |
+|---|---|
+| Fee | **3%** of the seller price |
+| Maximum | **$0.50** per purchase |
+| Minimum | none |
+| Micropayments | fee **waived** when too small to settle, while free capacity remains |
+
+The fee is a percentage below ~$16.67 and flat above it, so a $25 purchase and a
+$250 purchase both cost $0.50.
+
+## Non-custodial by construction
+
+The buyer signs **two independent authorisations**: one payable directly to the
+seller, one payable to Axiom. Axiom relays the seller's authorisation without
+modification and cannot alter its amount or destination.
+
+- Seller funds never enter an Axiom-controlled address.
+- **Axiom holds no signing key at all** — it cannot move your money.
+- Exactly one routing fee per completed purchase, charged only on success.
+- Fallback advances only on positive evidence the previous seller was not paid;
+  an ambiguous settlement halts the chain rather than risk a double payment.
+
+## Quickstart
+
+```bash
+npm install axiom-relay
+```
+
+```ts
+import { Axiom } from 'axiom-relay';
+import { x402Client } from '@x402/core/client';
+import { registerExactEvmScheme } from '@x402/evm/exact/client';
+import { privateKeyToAccount } from 'viem/accounts';
+
+const signer = new x402Client();
+registerExactEvmScheme(signer, { signer: privateKeyToAccount(process.env.KEY) });
+
+const axiom = new Axiom({ baseUrl: 'https://axiom-relay.reference-seller.workers.dev' });
+
+const { route, result } = await axiom.buy(signer, 'crypto price', {
+  network: 'eip155:8453',
+});
+
+console.log(route.selectionReason);
+console.log(result.downstream.body);
+```
+
+Or with plain HTTP:
+
+```bash
+curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/route \
+  -H 'content-type: application/json' \
+  -d '{"capability":"crypto price","requirements":{"network":"eip155:8453"}}'
+```
+
+## How routing decides
+
+Deterministic, no learning, no hidden preference:
+
+```
+score = (50*reliability + 30*price + 10*latency + 10*freshness) / 100
+```
+
+Reliability leads on purpose — a cheap provider that fails costs the agent a
+round trip and earns Axiom nothing. When the winner is not the cheapest, the
+response says so and names the price premium and the reliability figures that
+outweighed it. Ties break on provider id, so ordering is stable.
+
+## Machine integration
+
+| Surface | Path |
+|---|---|
+| Service descriptor | `/.well-known/x402` |
+| OpenAPI 3.1 | `/openapi.json` |
+| Agent skill | `/SKILL.md` |
+| LLM navigation | `/llms.txt` |
+| A2A Agent Card | `/.well-known/agent-card.json` |
+| MCP manifest | `/.well-known/mcp.json` |
+| Health | `/health` |
+
+## MCP
+
+```json
+{
+  "mcpServers": {
+    "axiom": { "type": "http", "url": "https://axiom-relay.reference-seller.workers.dev/mcp" }
+  }
+}
+```
+
+Tools: `find_paid_resource`, `quote_paid_resource`, `purchase_paid_resource`,
+`check_provider`. The MCP layer is a thin adapter over the HTTP API — it
+contains no payment logic, so the safety properties are identical.
+
+## Examples
+
+See [`examples/`](./examples): raw TypeScript, MCP, OpenAI tools, Claude Agent
+Skills, LangChain, Cloudflare Agents, and a generic x402 client.
+
+## Two behaviours worth knowing
+
+**Waived fee.** When `feePolicy` is `fee_waived_micropayment`, `axiomFee` is `0`
+and `payTo` is null. Do not sign a fee leg — there is nothing to authorise.
+
+**Free-route quota.** `free_route_quota_exhausted` (HTTP 429) means the purchase
+is valid and the provider healthy, but Axiom's free-routing allocation is spent.
+The response carries `resetsAt`. Purchases whose fee is collectible are never
+quota-limited.
+
+## Security model
+
+- x402 v2, `exact` scheme, USDC on Base.
+- Destination URLs are validated against SSRF: loopback, RFC1918, link-local,
+  cloud metadata, IPv4-mapped and NAT64 embeddings, embedded credentials and
+  non-web ports are refused, and every redirect hop is revalidated independently.
+- Replay protection claims each EIP-3009 authorisation nonce atomically.
+- A discovered provider is an untrusted claim: schema-checked, SSRF-validated
+  and probed for a live challenge before it can be selected.
+
+## Status
+
+Live on Base mainnet with real settlements. Base Sepolia also supported for
+testing. Current state is always readable at `/health`.
+
+## Licence
+
+MIT

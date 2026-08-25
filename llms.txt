@@ -1,0 +1,39 @@
+# Axiom Relay
+
+> An x402 smart router for autonomous agents. Give it a capability rather than a
+> URL: it discovers x402 providers, validates that they are live, ranks them on
+> price and reliability, pays the seller directly, and returns the result.
+> Non-custodial and keyless — Axiom never holds buyer or seller funds.
+
+Pricing: 3% of the seller price, capped at $0.50 per purchase. No minimum
+fee. A fee too small for the facilitator to settle is waived and the purchase is
+routed free while free-routing capacity remains.
+
+Protocols: x402 v2 (`exact` scheme), Base mainnet (eip155:8453) and Base
+Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
+
+## Endpoints
+
+- [Machine descriptor](https://axiom-relay.reference-seller.workers.dev/.well-known/x402): capabilities, pricing, schemas, availability
+- [Route by capability](https://axiom-relay.reference-seller.workers.dev/v1/route): POST a capability, receive ranked providers and a signed quote
+- [Quote a URL](https://axiom-relay.reference-seller.workers.dev/v1/quote): POST a known x402 resource URL, receive its price and Axiom's fee
+- [Execute](https://axiom-relay.reference-seller.workers.dev/v1/request): POST a quote plus signed authorisations
+- [Health](https://axiom-relay.reference-seller.workers.dev/health): status, network, facilitator, gates
+- [Provider listing](https://axiom-relay.reference-seller.workers.dev/v1/discovery): Bazaar-style resource entry for this relay
+
+## Documentation
+
+- [OpenAPI 3.1](https://axiom-relay.reference-seller.workers.dev/openapi.json): complete request and response schemas
+- [SKILL.md](https://axiom-relay.reference-seller.workers.dev/SKILL.md): when and how an agent should use Axiom
+- [A2A Agent Card](https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json): agent-to-agent capability descriptor
+- [MCP manifest](https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json): Model Context Protocol tools
+- [Source and SDK](https://github.com/Itr3k/axiom-relay)
+
+## Notes for implementers
+
+- Sign with the standard x402 SDK. Axiom never receives a private key.
+- When `feePolicy` is `fee_waived_micropayment`, omit the fee authorisation.
+- `free_route_quota_exhausted` means Axiom's free capacity is spent, not that
+  the purchase or provider is invalid.
+- Fallback advances only on positive evidence the previous seller was unpaid;
+  an ambiguous settlement halts the attempt chain.

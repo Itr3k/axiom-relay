@@ -1,0 +1,22 @@
+{
+  "name": "axiom-relay",
+  "version": "0.1.0",
+  "description": "Client for Axiom Relay, a non-custodial x402 smart router. Describe a capability, get a working provider, pay the seller directly.",
+  "keywords": ["x402", "ai-agents", "agent-payments", "smart-router", "provider-discovery", "non-custodial", "usdc", "base", "mcp", "machine-commerce"],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@x402/core": ">=2.23.0"
+  },
+  "repository": { "type": "git", "url": "git+https://github.com/Itr3k/axiom-relay.git" },
+  "homepage": "https://github.com/Itr3k/axiom-relay#readme",
+  "engines": { "node": ">=20" }
+}

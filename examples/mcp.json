@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "axiom": {
+      "type": "http",
+      "url": "https://axiom-relay.reference-seller.workers.dev/mcp"
+    }
+  }
+}
