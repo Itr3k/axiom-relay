@@ -13,7 +13,7 @@ paid capability?**
 | `cloudflare-agent.ts` | Cloudflare Agents / Workers |
 | `generic-x402.ts` | Any x402 client, no Axiom SDK |
 
-## Axiom Crypto (Beta)
+## Axiom Crypto
 
 | File | Ecosystem |
 |---|---|

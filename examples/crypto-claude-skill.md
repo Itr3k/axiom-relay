@@ -38,7 +38,7 @@ exact-amount approval, then the swap.
 Hand the transactions to the wallet layer. Axiom holds no key and exposes no
 execution endpoint — nothing happens until a signature exists.
 
-## Beta limits
+## Operational limits
 
 $500 per trade, $5,000 per day. Exceeding either returns
 `crypto_trade_too_large` or `crypto_daily_gmv_exhausted`; both are honest

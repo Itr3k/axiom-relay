@@ -126,7 +126,7 @@ quota-limited.
 Base mainnet (`eip155:8453`) and Base Sepolia (`eip155:84532`), USDC,
 x402 v2, `exact` scheme.
 
-## Swapping tokens (Axiom Crypto -- beta)
+## Swapping tokens (Axiom Crypto)
 
 Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
 
@@ -138,7 +138,7 @@ curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
 
 Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH.
 Execution providers: LI.FI.
-Beta: trades are capped at $500.
+Trades are capped at $500 -- an operational safety limit, not a product limit.
 Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap.
 
 Read `selected`, `costs` and `selectionReason` before signing. `savingsVsRunnerUp` says how much

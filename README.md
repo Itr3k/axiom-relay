@@ -10,7 +10,7 @@ Two capabilities, one product:
 | | what it does | status |
 |---|---|---|
 | **Axiom Services** | Finds, ranks and buys x402-paid APIs. The buyer's signed authorization is relayed to the seller. | Live on Base mainnet |
-| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Beta** on Base mainnet |
+| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Production** on Base mainnet |
 
 Axiom never holds customer funds, never signs a customer transaction, and
 stores no customer key. In both capabilities the agent or user is the signer.
@@ -169,7 +169,7 @@ MIT
 
 ---
 
-## Axiom Crypto (Beta)
+## Axiom Crypto
 
 Describe a swap. Axiom queries execution providers, normalises every fee and
 gas cost, ranks routes on what you would actually receive, validates the
@@ -186,12 +186,14 @@ Axiom never takes custody and never signs.
 | Assets | USDC, WETH, ETH, USDT |
 | Execution provider | LI.FI |
 | Axiom fee | **15 bps (0.15%)** |
-| Max trade (beta) | **$500** |
-| Daily volume (beta) | **$5,000** |
+| Max trade | **$500** |
+| Daily capacity | **$10,000** |
 | Rate limit | 30 routes/min |
 
-The beta ceilings are risk limits while the routing model is validated against
-live markets, not product limits.
+These are operational safety limits, not product limits. Axiom Crypto is in
+production: the capability is live and callable. Limits rise as Axiom
+accumulates verified production reliability -- see `/v1/crypto/capacity` for the
+current tier and its graduation gates.
 
 ### Fees are disclosed separately, always
 

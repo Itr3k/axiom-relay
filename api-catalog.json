@@ -6,12 +6,12 @@
                 {
                     "href": "https://axiom.elevatedai.io/openapi.json",
                     "type": "application/openapi+json",
-                    "title": "Axiom by Elevated AI \u2014 OpenAPI 3.1 description"
+                    "title": "Axiom by Elevated AI — OpenAPI 3.1 description"
                 },
                 {
                     "href": "https://axiom.elevatedai.io/.well-known/x402",
                     "type": "application/json",
-                    "title": "Axiom by Elevated AI \u2014 x402 service descriptor"
+                    "title": "Axiom by Elevated AI — x402 service descriptor"
                 }
             ],
             "service-doc": [

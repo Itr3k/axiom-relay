@@ -1,9 +1,21 @@
 {
   "name": "axiom-relay",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Client for Axiom by Elevated AI \u2014 non-custodial routing for AI agents. Buy paid x402 APIs and prepare crypto swaps your wallet signs.",
+  "license": "MIT",
+  "author": "Elevated AI / N3RD Labs LLC",
+  "homepage": "https://axiom.elevatedai.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Itr3k/axiom-relay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Itr3k/axiom-relay/issues"
+  },
   "keywords": [
     "agent-payments",
+    "agent-plugin",
+    "agent-tools",
     "agentic-commerce",
     "ai-agents",
     "api-payments",
@@ -13,7 +25,12 @@
     "crypto-routing",
     "defi",
     "elevated-ai",
+    "eliza",
+    "elizaos",
+    "langchain",
+    "langgraph",
     "lifi",
+    "llm-tools",
     "machine-commerce",
     "mcp",
     "micropayments",
@@ -25,36 +42,36 @@
     "usdc",
     "x402"
   ],
-  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "default": "./dist/index.js"
+    },
+    "./langchain": {
+      "types": "./dist/langchain/index.d.ts",
+      "default": "./dist/langchain/index.js"
+    },
+    "./elizaos": {
+      "types": "./dist/elizaos/index.d.ts",
+      "default": "./dist/elizaos/index.js"
     }
   },
   "files": [
     "dist",
     "README.md"
   ],
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "prepublishOnly": "npm run build"
-  },
-  "peerDependencies": {
-    "@x402/core": ">=2.23.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Itr3k/axiom-relay.git"
-  },
-  "homepage": "https://axiom.elevatedai.io",
   "engines": {
     "node": ">=20"
   },
-  "bugs": {
-    "url": "https://github.com/Itr3k/axiom-relay/issues"
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "prepack": "find dist -name '* 2.*' -o -name '* [0-9]' -type d | tr '\\n' '\\0' | xargs -0 rm -rf 2>/dev/null; true"
+  },
+  "peerDependencies": {
+    "@x402/core": ">=2.23.0"
   }
 }

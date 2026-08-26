@@ -16,7 +16,7 @@ npm install axiom-relay
 
 ---
 
-## Axiom Crypto (Beta)
+## Axiom Crypto
 
 Compare swap routes on what you would actually receive, then sign yourself.
 
@@ -75,11 +75,13 @@ a.recommendation;    // { execute, confidence, concerns, summary }
 
 Safe to expose to a model: nothing it returns can be signed.
 
-### Beta limits
+### Limits
 
-Base mainnet · USDC, WETH, ETH, USDT · **$500** max trade · **$5,000** daily ·
-30 routes/min. These are risk ceilings while the routing model is validated
-against live markets.
+Base mainnet · USDC, WETH, ETH, USDT · **$500** max trade · **$10,000** daily
+capacity · 30 routes/min. These are operational safety limits, not product
+limits — the capability is in production and callable today. Limits rise as
+Axiom accumulates verified production reliability; `/v1/crypto/capacity`
+reports the current tier and its graduation gates.
 
 ---
 

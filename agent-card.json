@@ -27,7 +27,7 @@
     "skills": [
         {
             "id": "route-crypto-swap",
-            "name": "Route a token swap without taking custody (beta)",
+            "name": "Route a token swap without taking custody (production)",
             "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH. Execution via LI.FI. Axiom fee 15 bps, embedded integrator fee, collected by the execution provider during the swap; provider fees are disclosed separately.",
             "tags": [
                 "swap-routing",

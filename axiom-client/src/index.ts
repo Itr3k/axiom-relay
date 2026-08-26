@@ -207,12 +207,12 @@ export class Axiom {
 }
 
 
-// --- Axiom Crypto (Beta) -----------------------------------------------------
+// --- Axiom Crypto ------------------------------------------------------------
 
 /** A swap to route. Amounts are atomic-unit strings; a JSON number would lose precision. */
 export interface CryptoRouteRequest {
   fromChain: number;
-  /** Defaults to fromChain. Cross-chain is disabled in beta. */
+  /** Defaults to fromChain. Cross-chain routing is currently disabled. */
   toChain?: number;
   sellToken: string;
   buyToken: string;

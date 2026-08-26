@@ -12,7 +12,7 @@
     "tools": [
         {
             "name": "quote_crypto_swap",
-            "description": "Route a token swap non-custodially. Compares execution providers, normalises every fee and gas cost, and returns transactions for YOUR wallet to sign -- Axiom never holds funds or keys. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Execution via LI.FI. Axiom fee 15 bps embedded in the swap; the provider's own fee is disclosed separately and is not Axiom revenue. Status: beta.",
+            "description": "Route a token swap non-custodially. Compares execution providers, normalises every fee and gas cost, and returns transactions for YOUR wallet to sign -- Axiom never holds funds or keys. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Execution via LI.FI. Axiom fee 15 bps embedded in the swap; the provider's own fee is disclosed separately and is not Axiom revenue. Status: production.",
             "inputSchema": {
                 "type": "object",
                 "required": [

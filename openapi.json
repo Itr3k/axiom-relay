@@ -7,7 +7,7 @@
             "name": "MIT",
             "identifier": "MIT"
         },
-        "summary": "Route machine spending through one interface \u2014 paid services and non-custodial crypto execution.",
+        "summary": "Route machine spending through one interface — paid services and non-custodial crypto execution.",
         "description": "Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.\n\nAxiom Services routes a paid x402 request to any compatible resource. The buyer signs two independent payment authorisations: one payable directly to the seller (relayed unmodified) and one payable directly to Axiom for routing. Axiom never takes custody of the seller's funds and never signs a transaction."
     },
     "servers": [
@@ -18,7 +18,7 @@
     ],
     "externalDocs": {
         "url": "https://axiom.elevatedai.io",
-        "description": "Axiom by Elevated AI \u2014 documentation and canonical identity"
+        "description": "Axiom by Elevated AI — documentation and canonical identity"
     },
     "security": [],
     "x-x402": {
@@ -513,9 +513,9 @@
         },
         "/v1/crypto/quote": {
             "post": {
-                "summary": "Route a token swap and return signable transactions (Beta)",
+                "summary": "Route a token swap and return signable transactions",
                 "operationId": "cryptoQuote",
-                "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Status: beta. Execution via LI.FI. Axiom never takes custody and never signs: the transactions returned must be signed by the taker's own wallet. Axiom fee 15 bps; the execution provider's own fee, network gas and slippage are disclosed separately in costDisclosure and are not Axiom revenue. Beta ceilings apply: maximum $500 per trade.",
+                "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Status: production. Execution via LI.FI. Axiom never takes custody and never signs: the transactions returned must be signed by the taker's own wallet. Axiom fee 15 bps; the execution provider's own fee, network gas and slippage are disclosed separately in costDisclosure and are not Axiom revenue. Production capacity tier 1: maximum $500 per transaction, $10000 configured daily capacity, 30 route requests per minute. See GET /v1/crypto/capacity for the current values.",
                 "requestBody": {
                     "required": true,
                     "content": {
