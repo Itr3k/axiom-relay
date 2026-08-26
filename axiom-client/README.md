@@ -75,13 +75,22 @@ a.recommendation;    // { execute, confidence, concerns, summary }
 
 Safe to expose to a model: nothing it returns can be signed.
 
-### Limits
+### Production capacity
 
-Base mainnet · USDC, WETH, ETH, USDT · **$500** max trade · **$10,000** daily
-capacity · 30 routes/min. These are operational safety limits, not product
-limits — the capability is in production and callable today. Limits rise as
-Axiom accumulates verified production reliability; `/v1/crypto/capacity`
-reports the current tier and its graduation gates.
+Base mainnet · USDC, WETH, ETH, USDT.
+
+**Tier 1** — $500 max transaction · $10,000 configured daily capacity ·
+30 route requests/min.
+
+Three independent controls, not one: the per-transaction ceiling bounds a
+single route's exposure, the daily capacity bounds aggregate throughput across
+every provider combined, and the request rate protects Axiom's infrastructure
+and the provider APIs behind it.
+
+These are operational safety controls, not a statement of past volume. Capacity
+increases as Axiom passes further production reliability and safety gates.
+Read the live values from `GET /v1/crypto/capacity` rather than copying them —
+they change without an SDK release.
 
 ---
 
@@ -104,6 +113,61 @@ settle. A micropayment is routed free rather than refused.
 
 ---
 
+## LangChain
+
+```ts
+import { DynamicStructuredTool } from '@langchain/core/tools';
+import { axiomTools } from 'axiom-relay/langchain';
+
+const tools = axiomTools({
+  baseUrl: 'https://axiom-relay.reference-seller.workers.dev',
+}).map((t) => new DynamicStructuredTool(t));
+
+// Bind them to a model as you would any other tool.
+```
+
+Four tools: `axiom_find_paid_api`, `axiom_quote_paid_api`,
+`axiom_quote_crypto_swap`, `axiom_analyze_crypto_swap`.
+
+**Every one is read-only and none accepts a key.** The crypto tools return an
+unsigned transaction; the x402 tools stop at a quote. That is a boundary
+rather than a missing feature — an agent framework is the wrong place to hand
+over signing authority, because the thing choosing what to sign is a language
+model. Purchase and execution stay in the runtime API, where you supply a
+signer explicitly.
+
+The adapter returns plain tool specs rather than LangChain classes, so it
+pins no LangChain version, and describes parameters in JSON Schema rather than
+zod, so it forces no zod major on you.
+
+Traffic is attributed as `source=langchain` unless you override it. Verified
+against LangChain 1.2.9.
+
+## ElizaOS
+
+```ts
+import { axiomPlugin } from 'axiom-relay/elizaos';
+
+const character = {
+  name: 'Treasury',
+  plugins: [axiomPlugin({ baseUrl: 'https://axiom.elevatedai.io' })],
+};
+```
+
+Four actions: `AXIOM_QUOTE_SWAP`, `AXIOM_ANALYZE_SWAP`, `AXIOM_FIND_PAID_API`,
+`AXIOM_QUOTE_PAID_API`.
+
+ElizaOS agents routinely hold wallets, which is exactly why the boundary is
+drawn hard here: every action is read-only, the crypto actions return an
+unsigned transaction, and nothing in the plugin accepts a key or can move
+funds. Axiom compares and validates; your agent signs, or declines.
+
+The plugin declares ElizaOS's types structurally rather than importing
+`@elizaos/core`, so it pins no version on the host agent. Verified against
+`@elizaos/core` 1.7.2 in a real `AgentRuntime`.
+
+Traffic is attributed as `source=elizaos`.
+
 ## Attribution
 
 Pass `source` when constructing the client so Axiom can tell which channel
@@ -125,4 +189,27 @@ is spent. Retry after `resetsAt`.
 
 ---
 
-MIT · Built by [Elevated AI](https://elevatedai.io)
+## Machine discovery
+
+Axiom describes itself in the formats an agent already knows how to read. Every
+one is live and reflects what is callable today — nothing here advertises a
+capability that is not in production.
+
+| | |
+|---|---|
+| Canonical service | <https://axiom.elevatedai.io> |
+| OpenAPI 3.1 | <https://axiom.elevatedai.io/openapi.json> |
+| MCP endpoint | `https://axiom.elevatedai.io/mcp` (streamable-http) |
+| A2A Agent Card | <https://axiom.elevatedai.io/.well-known/agent-card.json> |
+| x402 descriptor | <https://axiom.elevatedai.io/.well-known/x402> |
+| Agent instructions | <https://axiom.elevatedai.io/SKILL.md> |
+| For LLMs | <https://axiom.elevatedai.io/llms.txt> |
+| Capacity and limits | <https://axiom.elevatedai.io/v1/crypto/capacity> |
+
+Runnable examples for LangChain, ElizaOS, Vercel AI SDK, Mastra, Google ADK,
+OpenAI tools, Cloudflare Agents and plain TypeScript:
+<https://github.com/Itr3k/axiom-relay/tree/main/examples>
+
+---
+
+MIT · Built by [Elevated AI](https://elevatedai.io) · Elevated AI / N3RD Labs LLC
