@@ -515,7 +515,7 @@
             "post": {
                 "summary": "Route a token swap and return signable transactions",
                 "operationId": "cryptoQuote",
-                "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Status: production. Execution via LI.FI. Axiom never takes custody and never signs: the transactions returned must be signed by the taker's own wallet. Axiom fee 15 bps; the execution provider's own fee, network gas and slippage are disclosed separately in costDisclosure and are not Axiom revenue. Production capacity tier 1: maximum $500 per transaction, $10000 configured daily capacity, 30 route requests per minute. See GET /v1/crypto/capacity for the current values.",
+                "description": "Axiom Crypto Beta is live non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. LI.FI is the enabled routing provider. Axiom never takes custody and never signs: the transactions returned must be signed by the taker's own wallet. Axiom fee 15 bps; the execution provider's own fee, network gas and slippage are disclosed separately in costDisclosure and are not Axiom revenue. Live Beta capacity tier 1: maximum $500 per transaction, $10000 configured daily capacity, 30 route requests per minute. See GET /v1/crypto/capacity for the current values.",
                 "requestBody": {
                     "required": true,
                     "content": {

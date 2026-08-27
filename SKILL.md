@@ -126,7 +126,19 @@ quota-limited.
 Base mainnet (`eip155:8453`) and Base Sepolia (`eip155:84532`), USDC,
 x402 v2, `exact` scheme.
 
-## Swapping tokens (Axiom Crypto)
+## Browser agents (WebMCP)
+
+WebMCP is available as a live experimental browser integration. The public page
+and authoritative 19-tool manifest are:
+
+- https://axiom.elevatedai.io/integrations/webmcp
+- https://axiom.elevatedai.io/webmcp/manifest.json
+
+Every WebMCP tool declares `moneyMoved:false`, `signed:false`, and
+`submitted:false`. A server-derived `interface=webmcp` observation is separate
+from acquisition attribution; callers must not claim `source=webmcp`.
+
+## Swapping tokens (Axiom Crypto Beta)
 
 Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
 
@@ -137,7 +149,7 @@ curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
 ```
 
 Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH.
-Execution providers: LI.FI.
+Availability: live. Maturity: beta. Enabled routing provider: LI.FI.
 Trades are capped at $500 -- an operational safety limit, not a product limit.
 Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap.
 

@@ -10,7 +10,7 @@ Two capabilities, one product:
 | | what it does | status |
 |---|---|---|
 | **Axiom Services** | Finds, ranks and buys x402-paid APIs. The buyer's signed authorization is relayed to the seller. | Live on Base mainnet |
-| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Production** on Base mainnet |
+| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Live Beta** on Base mainnet |
 
 Axiom never holds customer funds, never signs a customer transaction, and
 stores no customer key. In both capabilities the agent or user is the signer.
@@ -117,6 +117,8 @@ outweighed it. Ties break on provider id, so ordering is stable.
 | LLM navigation | `/llms.txt` |
 | A2A Agent Card | `/.well-known/agent-card.json` |
 | MCP manifest | `/.well-known/mcp.json` |
+| WebMCP integration | `/integrations/webmcp` |
+| WebMCP manifest | `/webmcp/manifest.json` |
 | Health | `/health` |
 
 ## MCP
@@ -136,7 +138,16 @@ contains no payment logic, so the safety properties are identical.
 ## Examples
 
 See [`examples/`](./examples): raw TypeScript, MCP, OpenAI tools, Claude Agent
-Skills, LangChain, Cloudflare Agents, and a generic x402 client.
+Skills, LangChain, Cloudflare Agents, WebMCP, and a generic x402 client.
+
+Live first-party reference implementations:
+
+- [Axiom Marketplace](https://axiom.elevatedai.io/marketplace)
+- [Route Explorer](https://axiom.elevatedai.io/marketplace/route-explorer)
+- [Swap Agent](https://axiom.elevatedai.io/marketplace/swap)
+- [Service Buyer](https://axiom.elevatedai.io/marketplace/service-buyer)
+- [WebMCP integration](https://axiom.elevatedai.io/integrations/webmcp) and
+  [19-tool manifest](https://axiom.elevatedai.io/webmcp/manifest.json)
 
 ## Two behaviours worth knowing
 
@@ -169,7 +180,7 @@ MIT
 
 ---
 
-## Axiom Crypto
+## Axiom Crypto Beta
 
 Describe a swap. Axiom queries execution providers, normalises every fee and
 gas cost, ranks routes on what you would actually receive, validates the
@@ -190,9 +201,9 @@ Axiom never takes custody and never signs.
 | Daily capacity | **$10,000** |
 | Rate limit | 30 routes/min |
 
-These are operational safety limits, not product limits. Axiom Crypto is in
-production: the capability is live and callable. Limits rise as Axiom
-accumulates verified production reliability -- see `/v1/crypto/capacity` for the
+These are operational safety limits, not product limits. Axiom Crypto Beta is
+live and callable. It uses LI.FI as the enabled routing provider. Limits rise as
+Axiom accumulates verified reliability -- see `/v1/crypto/capacity` for the
 current tier and its graduation gates.
 
 ### Fees are disclosed separately, always

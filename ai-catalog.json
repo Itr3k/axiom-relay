@@ -103,10 +103,10 @@
         },
         {
             "identifier": "urn:air:axiom.elevatedai.io:tool:crypto-routing",
-            "displayName": "Axiom by Elevated AI — crypto routing (production)",
+            "displayName": "Axiom by Elevated AI — crypto routing (live Beta)",
             "type": "application/openapi+json",
             "url": "https://axiom.elevatedai.io/openapi.json",
-            "description": "Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. Execution via LI.FI. Axiom fee 15 bps; provider fees, gas and slippage are disclosed separately. Status: production.",
+            "description": "Axiom Crypto Beta is live non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs. LI.FI is the enabled routing provider. Axiom fee 15 bps; provider fees, gas and slippage are disclosed separately.",
             "capabilities": [
                 "quote_crypto_swap",
                 "analyze_crypto_swap"
@@ -127,13 +127,46 @@
                 "li.fi"
             ],
             "metadata": {
-                "status": "production",
+                "availability": "live",
+                "maturity": "beta",
                 "chains": "Ethereum, Base, Arbitrum One, OP Mainnet",
                 "assets": "ETH, USDC, USDT, WETH",
                 "custody": "non-custodial",
                 "execution": "caller-signs",
                 "maxTradeUsd": 500,
                 "feeBps": 15
+            }
+        },
+        {
+            "identifier": "urn:air:axiom.elevatedai.io:integration:webmcp",
+            "displayName": "Axiom by Elevated AI — WebMCP integration",
+            "type": "text/html",
+            "url": "https://axiom.elevatedai.io/integrations/webmcp",
+            "description": "Available live experimental browser integration exposing 19 bounded Axiom tools through WebMCP. Financial tools never sign, submit, move money, or expose operator data.",
+            "capabilities": [
+                "browser-agent-discovery",
+                "read-only-route-analysis",
+                "unsigned-route-preparation"
+            ],
+            "representativeQueries": [
+                "use Axiom from a browser agent",
+                "inspect Axiom WebMCP tools",
+                "analyze a crypto route without signing"
+            ],
+            "version": "0.1.0",
+            "tags": [
+                "webmcp",
+                "browser-agents",
+                "experimental",
+                "non-custodial"
+            ],
+            "metadata": {
+                "availability": "live",
+                "maturity": "experimental",
+                "manifest": "https://axiom.elevatedai.io/webmcp/manifest.json",
+                "moneyMoved": false,
+                "signed": false,
+                "submitted": false
             }
         }
     ]

@@ -16,7 +16,7 @@ npm install axiom-relay
 
 ---
 
-## Axiom Crypto
+## Axiom Crypto Beta
 
 Compare swap routes on what you would actually receive, then sign yourself.
 
@@ -75,7 +75,7 @@ a.recommendation;    // { execute, confidence, concerns, summary }
 
 Safe to expose to a model: nothing it returns can be signed.
 
-### Production capacity
+### Live Beta capacity
 
 Base mainnet · USDC, WETH, ETH, USDT.
 
@@ -88,7 +88,7 @@ every provider combined, and the request rate protects Axiom's infrastructure
 and the provider APIs behind it.
 
 These are operational safety controls, not a statement of past volume. Capacity
-increases as Axiom passes further production reliability and safety gates.
+increases as Axiom passes further reliability and safety gates.
 Read the live values from `GET /v1/crypto/capacity` rather than copying them —
 they change without an SDK release.
 
@@ -193,7 +193,7 @@ is spent. Retry after `resetsAt`.
 
 Axiom describes itself in the formats an agent already knows how to read. Every
 one is live and reflects what is callable today — nothing here advertises a
-capability that is not in production.
+capability that is not currently callable.
 
 | | |
 |---|---|
@@ -205,10 +205,16 @@ capability that is not in production.
 | Agent instructions | <https://axiom.elevatedai.io/SKILL.md> |
 | For LLMs | <https://axiom.elevatedai.io/llms.txt> |
 | Capacity and limits | <https://axiom.elevatedai.io/v1/crypto/capacity> |
+| WebMCP integration | <https://axiom.elevatedai.io/integrations/webmcp> |
+| WebMCP manifest | <https://axiom.elevatedai.io/webmcp/manifest.json> |
 
 Runnable examples for LangChain, ElizaOS, Vercel AI SDK, Mastra, Google ADK,
 OpenAI tools, Cloudflare Agents and plain TypeScript:
 <https://github.com/Itr3k/axiom-relay/tree/main/examples>
+
+Live first-party examples: [Route Explorer](https://axiom.elevatedai.io/marketplace/route-explorer),
+[Swap Agent](https://axiom.elevatedai.io/marketplace/swap), and
+[Service Buyer](https://axiom.elevatedai.io/marketplace/service-buyer).
 
 ---
 

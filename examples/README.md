@@ -12,6 +12,7 @@ paid capability?**
 | `langchain.ts` | LangChain tool |
 | `cloudflare-agent.ts` | Cloudflare Agents / Workers |
 | `generic-x402.ts` | Any x402 client, no Axiom SDK |
+| `webmcp/register-axiom-tools.ts` | Browser agents through the experimental WebMCP API |
 
 ## Axiom Crypto
 

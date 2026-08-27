@@ -69,10 +69,16 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
     "prepublishOnly": "npm run build",
     "prepack": "find dist -name '* 2.*' -o -name '* [0-9]' -type d | tr '\\n' '\\0' | xargs -0 rm -rf 2>/dev/null; true"
   },
   "peerDependencies": {
     "@x402/core": ">=2.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }

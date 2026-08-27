@@ -12,6 +12,16 @@
                     "href": "https://axiom.elevatedai.io/.well-known/x402",
                     "type": "application/json",
                     "title": "Axiom by Elevated AI — x402 service descriptor"
+                },
+                {
+                    "href": "https://axiom.elevatedai.io/integrations/webmcp",
+                    "type": "text/html",
+                    "title": "Axiom by Elevated AI — WebMCP integration"
+                },
+                {
+                    "href": "https://axiom.elevatedai.io/webmcp/manifest.json",
+                    "type": "application/json",
+                    "title": "Axiom by Elevated AI — WebMCP tool manifest"
                 }
             ],
             "service-doc": [
