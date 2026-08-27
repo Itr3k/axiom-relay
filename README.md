@@ -22,7 +22,7 @@ These are deliberately separate. The canonical site mirrors every machine
 contract over GET and serves no execution route, so documents reference it
 while requests execute against the runtime.
 
-Built by [Elevated AI](https://elevatedai.io).
+Built by [Elevated AI](https://elevatedai.io). See the [public changelog](./CHANGELOG.md) for completed integration updates.
 
 ---
 
@@ -96,16 +96,12 @@ curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/route \
 
 ## How routing decides
 
-Deterministic, no learning, no hidden preference:
+Axiom evaluates eligible service routes using factors such as cost, observed
+reliability, execution conditions, and applicable policy constraints. Responses
+include user-relevant reasons so integrators can evaluate the result.
 
-```
-score = (50*reliability + 30*price + 10*latency + 10*freshness) / 100
-```
-
-Reliability leads on purpose — a cheap provider that fails costs the agent a
-round trip and earns Axiom nothing. When the winner is not the cheapest, the
-response says so and names the price premium and the reliability figures that
-outweighed it. Ties break on provider id, so ordering is stable.
+Internal weights, thresholds, selection rules, and detailed fallback logic are
+part of the hosted Axiom service and are not published.
 
 ## Machine integration
 
