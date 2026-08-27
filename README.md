@@ -22,7 +22,7 @@ These are deliberately separate. The canonical site mirrors every machine
 contract over GET and serves no execution route, so documents reference it
 while requests execute against the runtime.
 
-Built by [Elevated AI](https://elevatedai.io).
+Built by [Elevated AI](https://elevatedai.io). See the [public changelog](./CHANGELOG.md) for completed integration updates.
 
 ---
 
