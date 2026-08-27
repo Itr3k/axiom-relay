@@ -269,3 +269,20 @@ intent → quote → inspect route → sign transaction → submit
 Axiom performs the first three. Your wallet performs the last two. There is no
 execution endpoint, because execution is signing, and Axiom cannot sign.
 
+---
+
+## Licensing
+
+This repository is Axiom's **client and integration layer** — the typed SDK,
+framework adapters, protocol descriptors and examples. It is MIT licensed, and
+you are free to embed it anywhere, including commercially.
+
+The Axiom **hosted service** is a separate proprietary work. It is not
+distributed here, and using or forking this SDK does not grant rights to it,
+imply partnership, or imply endorsement. The production service runs at
+<https://axiom.elevatedai.io>.
+
+The MIT licence applies to the source code in this repository. It does not grant
+rights to use the project's names, logos, or branding.
+
+Copyright (c) 2026 Elevated AI / N3RD Labs LLC. See `LICENSE` and `NOTICE`.

@@ -1,0 +1,33 @@
+# NOTICE
+
+## Axiom by Elevated AI
+
+Copyright (c) 2026 Elevated AI / N3RD Labs LLC.
+
+This repository contains Axiom's **client and integration layer** — the typed
+SDK, framework adapters, protocol descriptors, examples and integration
+documentation. It is licensed under MIT (see `LICENSE`).
+
+The Axiom **hosted service and runtime** — routing, provider selection, policy,
+validation, simulation, reliability and evidence — is a separate proprietary
+work and is not distributed here. Nothing in this repository grants rights to
+it.
+
+The MIT licence applies to the source code in this repository. It does not
+grant rights to use the project's names, logos, or branding.
+
+## Third-party software
+
+The following retain their own copyright and licence. Nothing here is a claim
+over that work, and their inclusion implies no endorsement of Axiom.
+
+| Component | Licence | Copyright | Use |
+|---|---|---|---|
+| `@x402/core` | Apache-2.0 | Copyright 2026 x402 Foundation | Peer dependency. x402 v2 protocol primitives. Not bundled. |
+
+Axiom's own architecture, adapters, tests, documentation and integration logic
+are original work of Elevated AI / N3RD Labs LLC unless a file states otherwise.
+
+Standards Axiom composes with — x402, A2A, AP2 — remain the work of their
+respective maintainers. Axiom implements against their public specifications and
+claims no ownership of them.
