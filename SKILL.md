@@ -42,6 +42,16 @@ which resource you want and do not need routing.
 | OpenAPI | `GET https://axiom-relay.reference-seller.workers.dev/openapi.json` |
 | Health | `GET https://axiom-relay.reference-seller.workers.dev/health` |
 
+## Browser agents (WebMCP)
+
+Axiom also offers an **available, live experimental browser integration** at
+https://axiom.elevatedai.io/integrations/webmcp. Compatible browsers receive contextual tools
+through `document.modelContext`; other browsers keep the full human interface.
+The public, non-executable catalog is https://axiom.elevatedai.io/webmcp/manifest.json.
+
+WebMCP is an interface observation, not acquisition attribution. Its tools do
+not sign, submit, custody, or move funds.
+
 ## 1. Route by capability
 
 ```bash
@@ -126,21 +136,9 @@ quota-limited.
 Base mainnet (`eip155:8453`) and Base Sepolia (`eip155:84532`), USDC,
 x402 v2, `exact` scheme.
 
-## Browser agents (WebMCP)
+## Swapping tokens (Axiom Crypto -- beta; live)
 
-WebMCP is available as a live experimental browser integration. The public page
-and authoritative 19-tool manifest are:
-
-- https://axiom.elevatedai.io/integrations/webmcp
-- https://axiom.elevatedai.io/webmcp/manifest.json
-
-Every WebMCP tool declares `moneyMoved:false`, `signed:false`, and
-`submitted:false`. A server-derived `interface=webmcp` observation is separate
-from acquisition attribution; callers must not claim `source=webmcp`.
-
-## Swapping tokens (Axiom Crypto Beta)
-
-Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
+Axiom Crypto Beta uses LI.FI as the enabled routing provider. Non-custodial crypto routing for autonomous agents: Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
 
 ```bash
 curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
@@ -149,8 +147,8 @@ curl -sX POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote \
 ```
 
 Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Assets: ETH, USDC, USDT, WETH.
-Availability: live. Maturity: beta. Enabled routing provider: LI.FI.
-Trades are capped at $500 -- an operational safety limit, not a product limit.
+Execution providers: LI.FI.
+Current live capacity (tier 1): up to $500 per transaction, $10,000 configured daily capacity, 30 route requests per minute. These are operational safety controls, not a statement of past volume. Capacity increases after verified production reliability, safety, and usage gates are met.
 Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap.
 
 Read `selected`, `costs` and `selectionReason` before signing. `savingsVsRunnerUp` says how much

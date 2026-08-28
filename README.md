@@ -1,19 +1,27 @@
 # Axiom by Elevated AI
 
-**The routing layer for AI spending.** Axiom is a non-custodial routing layer for
-autonomous AI agents. It helps agents discover and purchase paid machine
-services and route crypto transactions based on total cost, reliability,
-safety, and execution quality.
+**The economic layer for agents that isn't also a payment rail.** Axiom is the
+neutral economic control and evidence layer for autonomous software. It
+evaluates an agent's economic intent against operator policy, compares eligible
+providers and payment routes, validates the proposed execution, and preserves
+evidence for actions authorized and signed externally.
+
+Axiom owns no payment rail and takes no custody of principal. That is the point
+rather than a caveat: a stack that operates a rail is structurally incentivised
+to prefer its own, so provider-independent evaluation is only defensible from
+somewhere that owns none.
 
 Two capabilities, one product:
 
 | | what it does | status |
 |---|---|---|
 | **Axiom Services** | Finds, ranks and buys x402-paid APIs. The buyer's signed authorization is relayed to the seller. | Live on Base mainnet |
-| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Live Beta** on Base mainnet |
+| **Axiom Crypto** | Compares swap routes on total cost, validates the calldata, and returns transactions for the agent to sign. | **Beta**, currently live on Base mainnet |
 
 Axiom never holds customer funds, never signs a customer transaction, and
-stores no customer key. In both capabilities the agent or user is the signer.
+stores no customer key. It returns **unsigned** transactions; the agent or its
+authorized operator signs and submits them. In both capabilities the caller is
+the signer.
 
 **Canonical site:** <https://axiom.elevatedai.io> · **API origin:**
 `axiom-relay.reference-seller.workers.dev`
@@ -103,6 +111,22 @@ include user-relevant reasons so integrators can evaluate the result.
 Internal weights, thresholds, selection rules, and detailed fallback logic are
 part of the hosted Axiom service and are not published.
 
+## Interfaces
+
+The same decisioning and evidence surface is reachable through every interface
+below. None of them is the product; the product is the decision and the
+evidence, and each interface reaches the same one -- there is no
+interface-specific routing, pricing or validation path.
+
+| Interface | Status |
+|---|---|
+| MCP (server-side) | Production |
+| REST / OpenAPI | Production |
+| SDK / client adapter | Production |
+| LangChain, ElizaOS adapters | Production |
+| **WebMCP (browser-side)** | **Experimental** -- in-tab agents only |
+| A2A / AP2 | Monitored, not yet integrated |
+
 ## Machine integration
 
 | Surface | Path |
@@ -130,6 +154,19 @@ part of the hosted Axiom service and are not published.
 Tools: `find_paid_resource`, `quote_paid_resource`, `purchase_paid_resource`,
 `check_provider`. The MCP layer is a thin adapter over the HTTP API — it
 contains no payment logic, so the safety properties are identical.
+
+## Not live
+
+Stated explicitly, because a reader is more likely to assume a capability
+exists than to assume it does not:
+
+- **KyberSwap execution.** Kyber is under shadow evaluation and a prepared
+  canary only. It is **not** an enabled execution provider, it executes nothing,
+  and `KYBERSWAP_ROUTING_ENABLED` is `false` in production.
+- **Machine Economic Receipt (MER).** A draft, unpublished and unlicensed for
+  external use. Not enabled, not issuing, and no signing key exists.
+- **Any verification programme.** No audited status, no certification, no
+  revocation policy. Nothing Axiom publishes describes anything as "verified".
 
 ## Examples
 
@@ -197,10 +234,15 @@ Axiom never takes custody and never signs.
 | Daily capacity | **$10,000** |
 | Rate limit | 30 routes/min |
 
-These are operational safety limits, not product limits. Axiom Crypto Beta is
-live and callable. It uses LI.FI as the enabled routing provider. Limits rise as
-Axiom accumulates verified reliability -- see `/v1/crypto/capacity` for the
-current tier and its graduation gates.
+These are operational safety limits, not product limits. Axiom Crypto is **Beta
+and currently live**, and uses **LI.FI as the enabled execution provider** --
+the only one. Limits rise through the published capacity tiers; see
+`/v1/crypto/capacity` for the current tier and its graduation gates.
+
+That endpoint reports capacity, not reliability. It exposes no reliability
+score, and Axiom operates **no verification programme** -- there is no audited
+status, no certification and no revocation policy, so nothing here is described
+as "verified".
 
 ### Fees are disclosed separately, always
 

@@ -33,11 +33,11 @@ Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
 
 - [OpenAPI 3.1](https://axiom-relay.reference-seller.workers.dev/openapi.json): complete request and response schemas
 - [SKILL.md](https://axiom-relay.reference-seller.workers.dev/SKILL.md): when and how an agent should use Axiom
+- [WebMCP integration](https://axiom.elevatedai.io/integrations/webmcp): live experimental browser integration
+- [WebMCP manifest](https://axiom.elevatedai.io/webmcp/manifest.json): public contextual-tool catalog and authority boundaries
 - [A2A Agent Card](https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json): agent-to-agent capability descriptor
 - [MCP manifest](https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json): Model Context Protocol tools
 - [Source and SDK](https://github.com/Itr3k/axiom-relay)
-- [WebMCP integration](https://axiom.elevatedai.io/integrations/webmcp): live experimental browser integration
-- [WebMCP manifest](https://axiom.elevatedai.io/webmcp/manifest.json): authoritative 19-tool inventory and schemas
 
 ## Notes for implementers
 
@@ -48,16 +48,19 @@ Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
 - Fallback advances only on positive evidence the previous seller was unpaid;
   an ambiguous settlement halts the attempt chain.
 
-## Axiom Crypto Beta (live)
+## Axiom Crypto (beta; live)
 
-Non-custodial crypto routing for autonomous agents. Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
+Axiom Crypto Beta uses LI.FI as the enabled routing provider. Non-custodial crypto routing for autonomous agents: Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
 
-Enabled routing provider: LI.FI
+Execution providers: LI.FI
 Chains: Ethereum, Base, Arbitrum One, OP Mainnet
 Assets: ETH, USDC, USDT, WETH
 Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap
 Quote: POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote
 Analyze (no transaction returned): POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze
+
+WebMCP page: https://axiom.elevatedai.io/integrations/webmcp
+WebMCP manifest: https://axiom.elevatedai.io/webmcp/manifest.json
 
 - Live Beta service with a published per-transaction capacity limit
 - Axiom never takes custody of principal
