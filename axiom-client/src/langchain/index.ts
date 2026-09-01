@@ -1,5 +1,5 @@
 /**
- * LangChain tools for Axiom by Elevated AI.
+ * LangChain tools for Axiom Relay.
  *
  * Shipped as a subpath of the SDK rather than a separate package, so there is
  * one name, one version and one identity to find. `axiom-relay/langchain`.

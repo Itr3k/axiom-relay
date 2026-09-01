@@ -1,15 +1,42 @@
-# Axiom by Elevated AI
+# Axiom Relay
 
-**The economic layer for agents that isn't also a payment rail.** Axiom is the
-neutral economic control and evidence layer for autonomous software. It
+**The economic layer for agents that isn't also a payment rail.** Axiom Relay is
+the neutral economic control and evidence layer for autonomous software. It
 evaluates an agent's economic intent against operator policy, compares eligible
 providers and payment routes, validates the proposed execution, and preserves
 evidence for actions authorized and signed externally.
 
-Axiom owns no payment rail and takes no custody of principal. That is the point
+Axiom Relay owns no payment rail and takes no custody of principal. That is the point
 rather than a caveat: a stack that operates a rail is structurally incentivised
 to prefer its own, so provider-independent evaluation is only defensible from
 somewhere that owns none.
+
+## One product, three surfaces
+
+Axiom Relay is built in three codebases. This repository is the public face of
+the first; the other two are separate projects.
+
+| Surface | Where | What it is |
+|---|---|---|
+| **Infrastructure** | this repository / the Relay runtime | The economic, routing and evidence layer. Source of operational truth. |
+| **Live network** | [axiomrelay.io](https://axiomrelay.io) | Bazaar, Commons, Concierge, first-party agents and services, receipts, demonstrations. |
+| **Documentation** | [axiom.elevatedai.io](https://axiom.elevatedai.io) | Architecture, security and neutrality models, economics, integration guidance, specifications. |
+
+One document names all three, every machine interface, and the live
+availability of every capability:
+
+```
+GET /.well-known/axiom-relay.json
+```
+
+A snapshot is committed here as [`axiom-relay.json`](axiom-relay.json). A
+capability that is gated off reports `available: false` with a reason rather
+than being silently omitted, so an agent never finds a URL that would fail when
+called.
+
+Hugging Face is a published external runtime and distribution surface — a way
+to find and try Axiom Relay, never a payment path. Wherever a model runs, the
+economic layer stays here.
 
 Two capabilities, one product:
 

@@ -13,7 +13,7 @@ remote:
   transport: "streamable-http"
 
 metadata:
-  name: "Axiom by Elevated AI"
+  name: "Axiom Relay"
   description: "Two things an agent can do today. Buy x402-paid APIs without knowing the provider: describe a capability, and Axiom finds live providers, ranks them on price and reliability, and relays your own signed payment to the seller (3% capped at $0.50, waived when too small to settle). And route token swaps on Base non-custodially: Axiom compares execution routes on what you would actually receive, validates the calldata, and returns transactions your own wallet signs (15 bps, provider fees and gas disclosed separately). Axiom never holds funds, never holds keys, and never signs."
   homepage: "https://axiom.elevatedai.io"
   repository: "https://github.com/Itr3k/axiom-relay"

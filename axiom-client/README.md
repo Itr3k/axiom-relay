@@ -1,7 +1,7 @@
 # axiom-relay
 
-Client for **[Axiom by Elevated AI](https://github.com/Itr3k/axiom-relay)** — a
-non-custodial routing layer for autonomous AI agents.
+Client for **[Axiom Relay](https://github.com/Itr3k/axiom-relay)** — the neutral
+economic control and evidence layer for autonomous software.
 
 Axiom helps agents discover and purchase paid machine services, and route crypto
 transactions, based on total cost, reliability, safety and execution quality.

@@ -4,7 +4,7 @@ description: Buy an x402-paid API resource when you do not know which provider t
 homepage: https://axiom.elevatedai.io
 ---
 
-> **Axiom by Elevated AI** — https://axiom.elevatedai.io
+> **Axiom Relay by Elevated AI** — https://axiom.elevatedai.io
 > Documentation and identity live at the canonical site; the API origin below is
 > where requests execute. They are deliberately separate: the canonical host
 > mirrors documents over GET and serves no execution route.
@@ -41,6 +41,17 @@ which resource you want and do not need routing.
 | Machine descriptor | `GET https://axiom-relay.reference-seller.workers.dev/.well-known/x402` |
 | OpenAPI | `GET https://axiom-relay.reference-seller.workers.dev/openapi.json` |
 | Health | `GET https://axiom-relay.reference-seller.workers.dev/health` |
+| Discovery graph | `GET https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json` |
+
+## The Axiom Relay ecosystem
+
+Axiom Relay is one product with three surfaces. This runtime is the
+infrastructure and economic layer. The live network at https://axiomrelay.io
+runs Bazaar, Commons, Concierge, first-party agents and demonstrations.
+Documentation and specifications live at https://axiom.elevatedai.io.
+
+Fetch `https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json` to get all three, their machine
+surfaces, and the current availability of every capability, in one document.
 
 ## Browser agents (WebMCP)
 

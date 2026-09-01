@@ -1,5 +1,5 @@
 /**
- * ElizaOS plugin for Axiom by Elevated AI.
+ * ElizaOS plugin for Axiom Relay.
  *
  * A second subpath of the SDK — `axiom-relay/elizaos` — for the same reason
  * the LangChain adapter is one: a single name, version and identity beats
@@ -197,7 +197,7 @@ export function axiomPlugin(opts: AxiomElizaOptions): ElizaPluginLike {
   return {
     name: 'axiom',
     description:
-      'Axiom by Elevated AI — non-custodial routing for AI spending. Compares paid-API and crypto swap ' +
+      'Axiom Relay — non-custodial routing for AI spending. Compares paid-API and crypto swap ' +
       'routes on total cost, validates transaction safety, and returns unsigned transactions the agent ' +
       'signs itself. Axiom holds no funds and no keys.',
     actions,

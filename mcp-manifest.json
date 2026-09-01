@@ -1,1 +1,202 @@
-{"schemaVersion":"2025-11-25","name":"axiom-relay","title":"Axiom by Elevated AI","version":"0.1.0","description":"Buy x402-paid API resources. Describe the capability you need and Axiom finds a working provider, ranks candidates on price and reliability, pays the seller directly and returns the result. Fee 3% capped at $0.50; waived when too small to settle. Non-custodial.","homepage":"https://axiom-relay.reference-seller.workers.dev","transport":{"type":"streamable-http","url":"https://axiom-relay.reference-seller.workers.dev/mcp"},"tools":[{"name":"quote_crypto_swap","description":"Route a token swap non-custodially. Compares execution providers, normalises every fee and gas cost, and returns transactions for YOUR wallet to sign -- Axiom never holds funds or keys. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Execution via LI.FI. Axiom fee 15 bps embedded in the swap; the provider's own fee is disclosed separately and is not Axiom revenue. Status: beta.","inputSchema":{"type":"object","required":["fromChain","sellToken","buyToken","sellAmount","taker"],"properties":{"fromChain":{"type":"integer","description":"Chain id to sell on"},"toChain":{"type":"integer","description":"Chain id to receive on; defaults to fromChain"},"sellToken":{"type":"string","description":"Contract address of the token being sold"},"buyToken":{"type":"string","description":"Contract address of the token being bought"},"sellAmount":{"type":"string","description":"Amount in the sell token's atomic units"},"taker":{"type":"string","description":"Wallet address that will sign and hold the result"},"slippageBps":{"type":"integer","description":"Slippage tolerance in basis points"},"maxTotalFeeBps":{"type":"integer","description":"Refuse routes costing more than this, all-in"}}}},{"name":"analyze_crypto_swap","description":"Compare execution providers and total cost for a prospective swap and get a recommendation. Returns no signable transaction, so it cannot execute anything.","inputSchema":{"type":"object","required":["fromChain","sellToken","buyToken","sellAmount","taker"],"properties":{"fromChain":{"type":"integer"},"toChain":{"type":"integer"},"sellToken":{"type":"string"},"buyToken":{"type":"string"},"sellAmount":{"type":"string"},"taker":{"type":"string"}}}},{"name":"find_paid_resource","description":"Find x402 providers for a described capability and return them ranked, with the reason the top candidate was selected. Executes no payment.","inputSchema":{"type":"object","required":["capability"],"properties":{"capability":{"type":"string","description":"What you need, in words. Minimum 3 characters."},"maxPriceAtomic":{"type":"string","description":"Optional ceiling on the seller price, atomic units."},"network":{"type":"string","description":"Optional CAIP-2 network, e.g. eip155:8453."}}}},{"name":"quote_paid_resource","description":"Price a specific x402 resource URL, including the Axiom fee. Executes no payment.","inputSchema":{"type":"object","required":["url"],"properties":{"url":{"type":"string","description":"Absolute https URL of the x402 resource."},"method":{"type":"string","enum":["GET","HEAD","POST","PUT","PATCH","DELETE"]}}}},{"name":"purchase_paid_resource","description":"Execute a quoted purchase with buyer-signed authorisations. The caller signs; Axiom never holds a key.","inputSchema":{"type":"object","required":["quote","authorizations"],"properties":{"quote":{"type":"string","description":"Signed quote token from find_paid_resource or quote_paid_resource."},"authorizations":{"type":"array","description":"One { seller, fee } pair per candidate. Omit `fee` where the fee is waived.","items":{"type":"object","required":["seller"],"properties":{"seller":{"type":"string"},"fee":{"type":"string"}}}}}}},{"name":"check_provider","description":"Report whether an x402 resource is reachable, valid and what it charges. Executes no payment.","inputSchema":{"type":"object","required":["url"],"properties":{"url":{"type":"string"}}}}]}
+{
+    "schemaVersion": "2025-11-25",
+    "name": "axiom-relay",
+    "title": "Axiom Relay by Elevated AI",
+    "version": "0.1.0",
+    "ecosystem": {
+        "discoveryGraph": "https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json",
+        "liveNetwork": "https://axiomrelay.io",
+        "documentation": "https://axiom.elevatedai.io"
+    },
+    "description": "Buy x402-paid API resources. Describe the capability you need and Axiom finds a working provider, ranks candidates on price and reliability, pays the seller directly and returns the result. Fee 3% capped at $0.50; waived when too small to settle. Non-custodial.",
+    "homepage": "https://axiom-relay.reference-seller.workers.dev",
+    "transport": {
+        "type": "streamable-http",
+        "url": "https://axiom-relay.reference-seller.workers.dev/mcp"
+    },
+    "tools": [
+        {
+            "name": "quote_crypto_swap",
+            "description": "Route a token swap non-custodially. Compares execution providers, normalises every fee and gas cost, and returns transactions for YOUR wallet to sign -- Axiom never holds funds or keys. Chains: Ethereum, Base, Arbitrum One, OP Mainnet. Execution via LI.FI. Axiom fee 15 bps embedded in the swap; the provider's own fee is disclosed separately and is not Axiom revenue. Status: beta.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "fromChain",
+                    "sellToken",
+                    "buyToken",
+                    "sellAmount",
+                    "taker"
+                ],
+                "properties": {
+                    "fromChain": {
+                        "type": "integer",
+                        "description": "Chain id to sell on"
+                    },
+                    "toChain": {
+                        "type": "integer",
+                        "description": "Chain id to receive on; defaults to fromChain"
+                    },
+                    "sellToken": {
+                        "type": "string",
+                        "description": "Contract address of the token being sold"
+                    },
+                    "buyToken": {
+                        "type": "string",
+                        "description": "Contract address of the token being bought"
+                    },
+                    "sellAmount": {
+                        "type": "string",
+                        "description": "Amount in the sell token's atomic units"
+                    },
+                    "taker": {
+                        "type": "string",
+                        "description": "Wallet address that will sign and hold the result"
+                    },
+                    "slippageBps": {
+                        "type": "integer",
+                        "description": "Slippage tolerance in basis points"
+                    },
+                    "maxTotalFeeBps": {
+                        "type": "integer",
+                        "description": "Refuse routes costing more than this, all-in"
+                    }
+                }
+            }
+        },
+        {
+            "name": "analyze_crypto_swap",
+            "description": "Compare execution providers and total cost for a prospective swap and get a recommendation. Returns no signable transaction, so it cannot execute anything.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "fromChain",
+                    "sellToken",
+                    "buyToken",
+                    "sellAmount",
+                    "taker"
+                ],
+                "properties": {
+                    "fromChain": {
+                        "type": "integer"
+                    },
+                    "toChain": {
+                        "type": "integer"
+                    },
+                    "sellToken": {
+                        "type": "string"
+                    },
+                    "buyToken": {
+                        "type": "string"
+                    },
+                    "sellAmount": {
+                        "type": "string"
+                    },
+                    "taker": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        {
+            "name": "find_paid_resource",
+            "description": "Find x402 providers for a described capability and return them ranked, with the reason the top candidate was selected. Executes no payment.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "capability"
+                ],
+                "properties": {
+                    "capability": {
+                        "type": "string",
+                        "description": "What you need, in words. Minimum 3 characters."
+                    },
+                    "maxPriceAtomic": {
+                        "type": "string",
+                        "description": "Optional ceiling on the seller price, atomic units."
+                    },
+                    "network": {
+                        "type": "string",
+                        "description": "Optional CAIP-2 network, e.g. eip155:8453."
+                    }
+                }
+            }
+        },
+        {
+            "name": "quote_paid_resource",
+            "description": "Price a specific x402 resource URL, including the Axiom fee. Executes no payment.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "url"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "Absolute https URL of the x402 resource."
+                    },
+                    "method": {
+                        "type": "string",
+                        "enum": [
+                            "GET",
+                            "HEAD",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "purchase_paid_resource",
+            "description": "Execute a quoted purchase with buyer-signed authorisations. The caller signs; Axiom never holds a key.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "quote",
+                    "authorizations"
+                ],
+                "properties": {
+                    "quote": {
+                        "type": "string",
+                        "description": "Signed quote token from find_paid_resource or quote_paid_resource."
+                    },
+                    "authorizations": {
+                        "type": "array",
+                        "description": "One { seller, fee } pair per candidate. Omit `fee` where the fee is waived.",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "seller"
+                            ],
+                            "properties": {
+                                "seller": {
+                                    "type": "string"
+                                },
+                                "fee": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "check_provider",
+            "description": "Report whether an x402 resource is reachable, valid and what it charges. Executes no payment.",
+            "inputSchema": {
+                "type": "object",
+                "required": [
+                    "url"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    ]
+}

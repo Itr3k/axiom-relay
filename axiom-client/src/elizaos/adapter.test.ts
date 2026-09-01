@@ -31,10 +31,12 @@ describe('the ElizaOS plugin', () => {
     }
   });
 
-  it('names Axiom by Elevated AI, not bare Axiom', () => {
-    // Six established products share the bare name; the parent is what
-    // separates this one.
-    expect(plugin().description).toContain('Axiom by Elevated AI');
+  it('names Axiom Relay, not bare Axiom', () => {
+    // Six established products share the bare name. This once required the
+    // vendor suffix to disambiguate; the canonical product name now does that
+    // job directly, so the rule survives and the string it checks moved.
+    expect(plugin().description).toContain('Axiom Relay');
+    expect(plugin().description).not.toContain('Axiom by Elevated AI');
   });
 
   it('exposes no signing authority anywhere in its surface', () => {

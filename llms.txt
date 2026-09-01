@@ -1,10 +1,10 @@
-# Axiom by Elevated AI
+# Axiom Relay by Elevated AI
 
 > Canonical site: https://axiom.elevatedai.io
 > API origin:     https://axiom-relay.reference-seller.workers.dev
 > Parent:         Elevated AI (https://elevatedai.io)
 >
-> Axiom is a non-custodial routing layer for autonomous AI agents. It helps agents discover and purchase paid machine services and route crypto transactions based on total cost, reliability, safety, and execution quality.
+> Axiom Relay is the neutral economic control, routing, orchestration and evidence layer for autonomous software. It evaluates economic intent against operator policy, discovers and compares eligible services, providers and payment rails, validates and orchestrates execution, preserves the authorization boundary, and records portable evidence for actions authorized and signed externally.
 
 # Axiom Relay
 
@@ -38,6 +38,21 @@ Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
 - [A2A Agent Card](https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json): agent-to-agent capability descriptor
 - [MCP manifest](https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json): Model Context Protocol tools
 - [Source and SDK](https://github.com/Itr3k/axiom-relay)
+
+## The Axiom Relay ecosystem
+
+One product, three surfaces, each authoritative for something different. Start
+at the discovery graph and every public Axiom Relay surface is one hop away.
+
+- [Discovery graph](https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json): the canonical machine map of everything below
+- [Live network](https://axiomrelay.io): Bazaar, Commons, Concierge, services, agents and demonstrations
+- [Capability registry](https://axiomrelay.io/api/v1/capabilities): what the live network currently offers
+- [Directory](https://axiomrelay.io/api/v1/directory): listed services and their merchants
+- [Documentation](https://axiom.elevatedai.io/docs): architecture, security, economics, integration guidance
+
+This runtime is the infrastructure and economic layer. It is not the live
+network and it is not the documentation site; those are separate
+implementations of the same product, linked above.
 
 ## Notes for implementers
 

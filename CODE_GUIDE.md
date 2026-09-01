@@ -2,7 +2,7 @@
 
 ## Project overview
 
-This repository is Axiom by Elevated AI's public client and integration layer. It contains the `axiom-relay` TypeScript SDK, framework adapters, protocol descriptors, and copyable examples; the proprietary Cloudflare routing runtime is intentionally not included.
+This repository is Axiom Relay's public client and integration layer. It contains the `axiom-relay` TypeScript SDK, framework adapters, protocol descriptors, and copyable examples; the proprietary Cloudflare routing runtime is intentionally not included.
 
 ## Tech stack
 

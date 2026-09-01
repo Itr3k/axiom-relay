@@ -1,7 +1,7 @@
 {
   "name": "axiom-relay",
   "version": "0.2.1",
-  "description": "Client for Axiom by Elevated AI \u2014 non-custodial routing for AI agents. Buy paid x402 APIs and prepare crypto swaps your wallet signs.",
+  "description": "Client for Axiom Relay \u2014 non-custodial routing for AI agents. Buy paid x402 APIs and prepare crypto swaps your wallet signs.",
   "license": "MIT",
   "author": "Elevated AI / N3RD Labs LLC",
   "homepage": "https://axiom.elevatedai.io",
