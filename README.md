@@ -64,13 +64,19 @@ Built by [Elevated AI](https://elevatedai.io). See the [public changelog](./CHAN
 ## Why this exists
 
 Most x402 tooling assumes the agent already knows the provider's URL. In
-practice it doesn't — and roughly **13% of advertised x402 providers do not
-answer a valid challenge** when actually called (measured across the live
-Coinbase Bazaar catalogue). Axiom absorbs that problem.
+practice it doesn't — and a meaningful share of advertised x402 providers do
+not answer a valid challenge when actually called. Axiom absorbs that problem:
+describe the capability, and Axiom returns a validated, eligible route with an
+explainable decision reason.
 
 ```
-intent -> discover candidates -> validate -> rank -> pay -> return result
+intent -> eligible route -> pay -> return result
 ```
+
+Axiom Relay has visibility into more than 70 service providers. Selection is
+provider-neutral, deterministic for identical inputs, and considers price,
+observed reliability, availability and the request constraints. How that
+evaluation is performed is part of the hosted service and is not published.
 
 ## Pricing
 
@@ -226,8 +232,9 @@ quota-limited.
   cloud metadata, IPv4-mapped and NAT64 embeddings, embedded credentials and
   non-web ports are refused, and every redirect hop is revalidated independently.
 - Replay protection claims each EIP-3009 authorisation nonce atomically.
-- A discovered provider is an untrusted claim: schema-checked, SSRF-validated
-  and probed for a live challenge before it can be selected.
+- No provider is selected without being validated live first. Axiom never
+  relays a payment to an endpoint it has not confirmed answers a well-formed
+  x402 challenge.
 
 ## Status
 

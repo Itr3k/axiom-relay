@@ -4,6 +4,27 @@ Notable changes to Axiom's public client and integration layer are recorded
 here. Entries describe completed public work; internal implementation details
 and future roadmap items are intentionally excluded.
 
+## 2026-09-01 — intelligence boundary
+
+- Reduced public provider telemetry to a minimal decision-oriented projection
+  and strengthened the boundary between public routing explanations and
+  internal provider intelligence.
+- Route responses now carry, per candidate, a `standing` (`preferred`,
+  `fallback` or `eligible`), a stable `reasonCode`, and a plain-language
+  `reason`. The selected route keeps everything needed to pay: resource,
+  price, fee, total, network, asset, custody posture and expiry.
+- The x402 descriptor states what selection guarantees — provider-neutral,
+  deterministic, validated live, considering price, observed reliability,
+  availability and request constraints — without describing how it is
+  computed.
+- **Compatibility:** `score`, `components`, `reliability`, `host`,
+  `discovery` and `probed` are no longer present on `/v1/route` responses or
+  in quote tokens. No published client read them. `axiom-relay` client types
+  are updated in lockstep (0.2.2). Use `resource` where `host` was used.
+- Regenerated all committed machine contracts from the deployed release.
+- Fees, payment behaviour, routing outcomes, crypto behaviour and every public
+  route are unchanged.
+
 ## 2026-09-01
 
 - Adopted **Axiom Relay** as the canonical product name across the README,

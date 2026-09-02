@@ -8,7 +8,7 @@
         "liveNetwork": "https://axiomrelay.io",
         "documentation": "https://axiom.elevatedai.io"
     },
-    "description": "Buy x402-paid API resources. Describe the capability you need and Axiom finds a working provider, ranks candidates on price and reliability, pays the seller directly and returns the result. Fee 3% capped at $0.50; waived when too small to settle. Non-custodial.",
+    "description": "Buy x402-paid API resources. Describe the capability you need and Axiom returns a validated, eligible route with an explainable decision reason, pays the seller directly and returns the result. Fee 3% capped at $0.50; waived when too small to settle. Non-custodial.",
     "homepage": "https://axiom-relay.reference-seller.workers.dev",
     "transport": {
         "type": "streamable-http",

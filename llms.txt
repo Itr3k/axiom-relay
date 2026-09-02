@@ -9,8 +9,8 @@
 # Axiom Relay
 
 > An x402 smart router for autonomous agents. Give it a capability rather than a
-> URL: it discovers x402 providers, validates that they are live, ranks them on
-> price and reliability, pays the seller directly, and returns the result.
+> URL: it returns a validated, eligible x402 route with an explainable decision
+> reason, pays the seller directly, and returns the result.
 > Non-custodial and keyless — Axiom never holds buyer or seller funds.
 
 Pricing: 3% of the seller price, capped at $0.50 per purchase. No minimum
@@ -27,7 +27,7 @@ Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
 - [Quote a URL](https://axiom-relay.reference-seller.workers.dev/v1/quote): POST a known x402 resource URL, receive its price and Axiom's fee
 - [Execute](https://axiom-relay.reference-seller.workers.dev/v1/request): POST a quote plus signed authorisations
 - [Health](https://axiom-relay.reference-seller.workers.dev/health): status, network, facilitator, gates
-- [Provider listing](https://axiom-relay.reference-seller.workers.dev/v1/discovery): Bazaar-style resource entry for this relay
+- [Provider listing](https://axiom-relay.reference-seller.workers.dev/v1/discovery): x402 resource listing for this relay
 
 ## Documentation
 

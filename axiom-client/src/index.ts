@@ -22,7 +22,8 @@ export type FeePolicy = 'fee_collected' | 'fee_waived_micropayment';
 export interface RouteCandidate {
   rank: number;
   providerId: string;
-  host: string;
+  standing: 'preferred' | 'fallback' | 'eligible';
+  reasonCode: string;
   resource: string;
   method: string;
   network: string;
@@ -36,7 +37,6 @@ export interface RouteCandidate {
   theoreticalFee: string;
   feePolicy: FeePolicy;
   total: string;
-  score: number;
   reason: string;
   usableAsFallback: boolean;
 }
@@ -294,7 +294,6 @@ export interface CryptoRoute {
     priceImpactBps: number | null;
     estimatedGas: string | null;
     transactionCount: number;
-    reliability: number;
   };
   axiomFee: { bps: number; amount: string; token: string; collection: string; note: string };
   costDisclosure: CryptoCostDisclosure;

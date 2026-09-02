@@ -150,7 +150,7 @@
         },
         "/v1/discovery": {
             "get": {
-                "summary": "Bazaar-style resource listing for this relay",
+                "summary": "x402 resource listing for this relay",
                 "operationId": "listResources",
                 "responses": {
                     "200": {
@@ -182,7 +182,7 @@
         "/v1/route": {
             "post": {
                 "summary": "Resolve a capability into a ranked provider selection",
-                "description": "Takes a capability description instead of a URL. Searches x402 discovery catalogues, validates candidates against a live x402 challenge, ranks them deterministically, and returns a signed quote covering the selected provider and its fallbacks. Executes no payment. Requires AXIOM_SMART_ROUTING_ENABLED.",
+                "description": "Takes a capability description instead of a URL. Returns a validated, eligible provider route with a standing, a stable reasonCode and a plain-language selection reason, plus a signed multi-candidate quote.",
                 "operationId": "route",
                 "requestBody": {
                     "required": true,
