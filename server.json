@@ -1,18 +1,12 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Itr3k/axiom-x402-payment-crypto-router",
-  "title": "Axiom Relay",
-  "description": "Axiom Relay: buy x402-paid APIs, route non-custodial crypto swaps on Base. You sign.",
-  "version": "0.3.1",
-  "websiteUrl": "https://axiom.elevatedai.io",
+  "title": "Axiom Relay legacy x402/crypto listing (retired)",
+  "description": "Retired legacy Axiom MCP listing. No transport is offered; see axiomrelay.io.",
+  "version": "0.3.2",
+  "websiteUrl": "https://axiomrelay.io",
   "repository": {
     "url": "https://github.com/Itr3k/axiom-relay",
     "source": "github"
-  },
-  "remotes": [
-    {
-      "type": "streamable-http",
-      "url": "https://axiom.elevatedai.io/mcp"
-    }
-  ]
+  }
 }

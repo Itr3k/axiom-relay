@@ -1,43 +1,14 @@
 {
-    "linkset": [
+  "linkset": [
+    {
+      "anchor": "https://github.com/Itr3k/axiom-relay",
+      "service-doc": [
         {
-            "anchor": "https://axiom.elevatedai.io/.well-known/api-catalog",
-            "item": [
-                {
-                    "href": "https://axiom.elevatedai.io/openapi.json",
-                    "type": "application/openapi+json",
-                    "title": "Axiom Relay by Elevated AI \u2014 OpenAPI 3.1 description"
-                },
-                {
-                    "href": "https://axiom.elevatedai.io/.well-known/x402",
-                    "type": "application/json",
-                    "title": "Axiom Relay by Elevated AI \u2014 x402 service descriptor"
-                },
-                {
-                    "href": "https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json",
-                    "type": "application/json",
-                    "title": "Axiom Relay by Elevated AI \u2014 ecosystem discovery graph"
-                }
-            ],
-            "service-doc": [
-                {
-                    "href": "https://axiom.elevatedai.io/SKILL.md",
-                    "type": "text/markdown",
-                    "title": "Agent usage guidance"
-                }
-            ],
-            "service-desc": [
-                {
-                    "href": "https://axiom.elevatedai.io/openapi.json",
-                    "type": "application/openapi+json"
-                }
-            ],
-            "author": [
-                {
-                    "href": "https://elevatedai.io",
-                    "title": "Elevated AI"
-                }
-            ]
+          "href": "https://axiomrelay.io",
+          "type": "text/html",
+          "title": "Current Axiom Relay product"
         }
-    ]
+      ]
+    }
+  ]
 }

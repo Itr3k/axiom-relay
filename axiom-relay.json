@@ -1,171 +1,21 @@
 {
-    "self": "https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json",
-    "graphVersion": "1",
-    "product": {
-        "name": "Axiom Relay",
-        "vendor": "Elevated AI",
-        "tagline": "Route machine spending through one interface \u2014 paid services and non-custodial crypto execution.",
-        "description": "Axiom Relay is the neutral economic control, routing, orchestration and evidence layer for autonomous software. It evaluates economic intent against operator policy, discovers and compares eligible services, providers and payment rails, validates and orchestrates execution, preserves the authorization boundary, and records portable evidence for actions authorized and signed externally.",
-        "custody": "non-custodial"
-    },
-    "surfaces": {
-        "infrastructure": {
-            "role": "infrastructure",
-            "name": "Axiom Relay",
-            "summary": "The neutral economic control, routing, orchestration, validation, authorization-boundary and evidence layer for autonomous software. Non-custodial: it never holds principal, receives private keys, or signs on a caller's behalf.",
-            "origin": "https://axiom-relay.reference-seller.workers.dev",
-            "documentOrigin": "https://axiom.elevatedai.io",
-            "version": "0.1.0"
-        },
-        "liveNetwork": {
-            "role": "live-network",
-            "name": "AxiomRelay.io",
-            "origin": "https://axiomrelay.io",
-            "summary": "The live Axiom Relay network: capability marketplace, Commons, Concierge, first-party agents, demonstrations and reference implementations. Operated as a separate implementation on top of the Axiom Relay economic model.",
-            "surfaces": {
-                "bazaar": "https://axiomrelay.io/bazaar",
-                "commons": "https://axiomrelay.io/commons",
-                "concierge": "https://axiomrelay.io/concierge",
-                "receipts": "https://axiomrelay.io/receipts",
-                "developers": "https://axiomrelay.io/developers",
-                "status": "https://axiomrelay.io/status"
-            },
-            "machineSurfaces": {
-                "capabilityRegistry": "https://axiomrelay.io/api/v1/capabilities",
-                "directory": "https://axiomrelay.io/api/v1/directory",
-                "agentAccess": "https://axiomrelay.io/api/v1/agent-access",
-                "agentCard": "https://axiomrelay.io/.well-known/agent-card.json",
-                "openapi": "https://axiomrelay.io/openapi.json",
-                "llmsTxt": "https://axiomrelay.io/llms.txt",
-                "skill": "https://axiomrelay.io/SKILL.md",
-                "x402": "https://axiomrelay.io/.well-known/x402"
-            }
-        },
-        "documentation": {
-            "role": "documentation",
-            "name": "Axiom documentation",
-            "origin": "https://axiom.elevatedai.io",
-            "summary": "Authoritative explanation of Axiom Relay: architecture, neutrality and security models, economics and fees, API and protocol documentation, integration guidance, and specifications.",
-            "surfaces": {
-                "docs": "https://axiom.elevatedai.io/docs",
-                "security": "https://axiom.elevatedai.io/security",
-                "pricing": "https://axiom.elevatedai.io/pricing",
-                "status": "https://axiom.elevatedai.io/status",
-                "articles": "https://axiom.elevatedai.io/articles",
-                "marketplace": "https://axiom.elevatedai.io/marketplace"
-            }
-        }
-    },
-    "machineSurfaces": {
-        "discoveryGraph": "https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json",
-        "openapi": "https://axiom.elevatedai.io/openapi.json",
-        "agentCard": "https://axiom.elevatedai.io/.well-known/agent-card.json",
-        "mcpManifest": "https://axiom.elevatedai.io/.well-known/mcp.json",
-        "aiCatalog": "https://axiom.elevatedai.io/.well-known/ai-catalog",
-        "apiCatalog": "https://axiom.elevatedai.io/.well-known/api-catalog",
-        "x402": "https://axiom.elevatedai.io/.well-known/x402",
-        "llmsTxt": "https://axiom.elevatedai.io/llms.txt",
-        "skill": "https://axiom.elevatedai.io/SKILL.md",
-        "mcpEndpoint": "https://axiom-relay.reference-seller.workers.dev/mcp",
-        "x402Discovery": "https://axiom-relay.reference-seller.workers.dev/v1/discovery",
-        "health": "https://axiom-relay.reference-seller.workers.dev/health"
-    },
-    "interfaces": [
-        {
-            "id": "mcp",
-            "label": "MCP (server-side)",
-            "status": "production"
-        },
-        {
-            "id": "rest",
-            "label": "REST / OpenAPI",
-            "status": "production"
-        },
-        {
-            "id": "sdk",
-            "label": "SDK / client adapter",
-            "status": "production"
-        },
-        {
-            "id": "langchain",
-            "label": "LangChain adapter",
-            "status": "production"
-        },
-        {
-            "id": "elizaos",
-            "label": "ElizaOS adapter",
-            "status": "production"
-        },
-        {
-            "id": "webmcp",
-            "label": "WebMCP (browser-side)",
-            "status": "experimental"
-        },
-        {
-            "id": "a2a",
-            "label": "A2A / AP2",
-            "status": "monitored"
-        }
-    ],
-    "capabilities": {
-        "serviceRouting": {
-            "available": true,
-            "summary": "Discover, rank and purchase x402-paid machine services with a caller-signed payment.",
-            "endpoints": {
-                "quote": "https://axiom-relay.reference-seller.workers.dev/v1/quote",
-                "route": "https://axiom-relay.reference-seller.workers.dev/v1/route",
-                "request": "https://axiom-relay.reference-seller.workers.dev/v1/request"
-            }
-        },
-        "cryptoRouting": {
-            "available": true,
-            "maturity": "beta",
-            "summary": "Axiom Crypto Beta uses LI.FI as the enabled routing provider. Non-custodial crypto routing for autonomous agents: Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.",
-            "custody": "non-custodial",
-            "endpoints": {
-                "quote": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote",
-                "analyze": "https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze"
-            }
-        },
-        "machineEconomicReceipts": {
-            "available": false,
-            "reason": "not implemented in this build"
-        }
-    },
-    "externalRuntimes": [
-        {
-            "id": "huggingface",
-            "name": "Hugging Face",
-            "origin": "https://huggingface.co",
-            "roles": [
-                "model-runtime",
-                "agent-runtime",
-                "model-factory",
-                "dataset-and-training",
-                "distribution-surface",
-                "discovery-surface"
-            ],
-            "economicLayer": "axiom-relay",
-            "note": "A model or agent hosted here is reachable through Axiom Relay economics once integrated. Axiom Relay remains responsible for discovery, routing, policy, quoting, payment, the service contract, receipts and provider history.",
-            "publishedServices": [
-                {
-                    "id": "huggingface-space-axiom-relay",
-                    "kind": "space",
-                    "url": "https://huggingface.co/spaces/Elevated-Ai-io/axiom-relay",
-                    "owner": "Elevated-Ai-io",
-                    "commerce": "discovery-only",
-                    "confirmedAt": "2026-09-01"
-                }
-            ]
-        }
-    ],
-    "distribution": {
-        "source": "https://github.com/Itr3k/axiom-relay",
-        "npm": "https://www.npmjs.com/package/axiom-relay",
-        "npmPackage": "axiom-relay"
-    },
-    "operator": {
-        "name": "Elevated AI",
-        "url": "https://elevatedai.io"
-    }
+  "graphVersion": "2",
+  "status": "retired",
+  "repository": "https://github.com/Itr3k/axiom-relay",
+  "description": "Tombstone for the retired Axiom x402 and crypto-routing integration repository.",
+  "legacyIdentifiers": {
+    "npm": "axiom-relay",
+    "mcp": [
+      "io.github.Itr3k/axiom-x402-payment-relay",
+      "io.github.Itr3k/axiom-x402-payment-crypto-router"
+    ]
+  },
+  "canonical": {
+    "homepage": "https://axiomrelay.io",
+    "capabilities": "https://axiomrelay.io/api/v1/capabilities",
+    "serviceDiscovery": "https://axiomrelay.io/.well-known/axiom-services.json",
+    "agentCard": "https://axiomrelay.io/.well-known/agent-card.json",
+    "openapi": "https://axiomrelay.io/openapi.json"
+  },
+  "executionSurfaces": []
 }

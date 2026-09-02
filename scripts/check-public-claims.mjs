@@ -1,74 +1,65 @@
 #!/usr/bin/env node
 /**
- * What this repository is allowed to claim.
+ * Repository-controlled identity guard for the retired public integration repo.
  *
- * Every statement below was wrong here at least once. The README described
- * Axiom as "the routing layer for AI spending", told readers that limits rise
- * with "verified reliability" and pointed them at an endpoint that exposes no
- * such field, and the machine contracts drifted ahead of production while
- * nobody was comparing them.
- *
- * Run with `node scripts/check-public-claims.mjs`. No dependencies, so it works
- * in a fresh clone and in CI without an install step.
+ * External registries can lag until their owners retire/deprecate an entry. This
+ * check guarantees that the source repository itself cannot advertise a live
+ * legacy transport or accidentally republish the historical npm/MCP identities.
  */
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
-const readme = readFileSync('README.md', 'utf8');
+const read = (file) => readFileSync(file, 'utf8');
+const json = (file) => JSON.parse(read(file));
 const fails = [];
 
-/** A claim the repository MUST make, because its absence misleads. */
-const required = [
-  [/neutral economic control and evidence layer/i, 'position: neutral economic control and evidence layer'],
-  [/isn't also a payment rail/i, 'homepage line'],
-  [/owns no payment rail/i, 'owns no rail'],
-  [/\*\*Beta\*\*, currently live/i, 'Axiom Crypto is Beta and currently live'],
-  [/LI\.FI as the enabled execution provider/i, 'LI.FI is the enabled execution provider'],
-  [/WebMCP \(browser-side\)[\s\S]{0,40}\*\*Experimental\*\*/i, 'WebMCP is experimental'],
-  [/returns \*\*unsigned\*\* transactions/i, 'returns unsigned transactions'],
-  [/never holds customer funds/i, 'non-custodial'],
-  [/KYBERSWAP_ROUTING_ENABLED` is `false`/i, 'Kyber execution is not live'],
-  [/Machine Economic Receipt \(MER\)[\s\S]{0,30}draft/i, 'MER is not live'],
-  [/no verification programme/i, 'no verification programme exists'],
-  [/exposes no reliability[\s\S]{0,10}score/i, 'no reliability field is claimed'],
+const identityFiles = [
+  'README.md',
+  'axiom-client/README.md',
+  'axiom-client/package.json',
+  'server.json',
+  'mcp-manifest.json',
+  'axiom-relay.json',
+  'agent-card.json',
+  'openapi.json',
+  'ai-catalog.json',
+  'api-catalog.json',
+  'llms.txt',
+  'SKILL.md',
 ];
 
-/**
- * Vocabulary that must not appear.
- *
- * The Kyber pattern deliberately excludes the environment-variable name: an
- * earlier version of this check flagged `KYBERSWAP_ROUTING_ENABLED` as "Kyber
- * described as enabled", which is the sentence that says it is switched off.
- */
-const forbidden = [
-  [/\bverified reliability\b/i, '"verified reliability"'],
-  [/\bVerified\b(?!")/, '"Verified" used as a status'],
-  [/industry[- ]standard|the standard for/i, 'standard-status claim'],
-  [/trusted by \d|widely adopted|thousands of|used by \d+ (agents|companies)/i, 'traction claim'],
-  [/the routing layer for AI spending/i, 'superseded positioning'],
-  [/Kyber(?!SWAP_ROUTING)[^.\n]{0,40}\b(is enabled|executes trades|is an execution provider)\b/i, 'Kyber described as executing'],
-];
+const joined = identityFiles.map(read).join('\n');
+const readme = read('README.md');
+const pkg = json('axiom-client/package.json');
+const server = json('server.json');
+const mcp = json('mcp-manifest.json');
+const graph = json('axiom-relay.json');
+const agentCard = json('agent-card.json');
+const openapi = json('openapi.json');
 
-for (const [re, label] of required) if (!re.test(readme)) fails.push(`MISSING   ${label}`);
-for (const [re, label] of forbidden) {
-  const m = readme.match(re);
-  if (m) fails.push(`FORBIDDEN ${label} -> ${JSON.stringify(m[0].slice(0, 60))}`);
-}
+const require = (ok, message) => { if (!ok) fails.push(`MISSING   ${message}`); };
+const forbid = (ok, message) => { if (ok) fails.push(`FORBIDDEN ${message}`); };
 
-/** Machine contracts must parse and keep their advertised capability. */
-const shape = [
-  ['openapi.json', (d) => String(d.openapi ?? '').startsWith('3.') && Object.keys(d.paths ?? {}).length >= 9, 'OpenAPI 3.x with >= 9 paths'],
-  ['agent-card.json', (d) => (d.skills ?? []).length >= 6 && (d.supportedInterfaces ?? d.url), 'agent card: >= 6 skills, transport declared'],
-  ['mcp-manifest.json', (d) => (d.tools ?? []).every((t) => t.name && t.inputSchema), 'every MCP tool has an inputSchema'],
-  ['ai-catalog.json', (d) => !!d, 'ai-catalog parses'],
-  ['api-catalog.json', (d) => !!d, 'api-catalog parses'],
-];
-for (const [file, ok, label] of shape) {
-  try {
-    if (!ok(JSON.parse(readFileSync(file, 'utf8')))) fails.push(`SHAPE     ${file}: ${label}`);
-  } catch (e) { fails.push(`PARSE     ${file}: ${e.message}`); }
-}
+require(/retired/i.test(readme), 'README retirement notice');
+require(readme.includes('https://axiomrelay.io'), 'canonical current homepage');
+require(pkg.private === true, 'npm package is private against accidental publication');
+require(pkg.homepage === 'https://axiomrelay.io', 'npm metadata points to canonical homepage');
+require(/retired/i.test(pkg.description), 'npm metadata is explicitly retired');
+require(server.name === 'io.github.Itr3k/axiom-x402-payment-crypto-router', 'exact legacy MCP identity');
+require(/retired/i.test(`${server.title} ${server.description}`), 'MCP registry tombstone copy');
+require(!('remotes' in server) && !('packages' in server), 'MCP registry descriptor exposes no transport');
+require(mcp.status === 'retired' && mcp.transport === null && mcp.tools.length === 0, 'MCP manifest is inert');
+require(graph.status === 'retired' && graph.executionSurfaces.length === 0, 'discovery graph is inert');
+require(agentCard.skills.length === 0, 'Agent Card exposes no skills');
+require(Object.keys(openapi.paths).length === 0, 'OpenAPI exposes no paths');
+require(!existsSync('.github/workflows/publish-mcp.yml'), 'automatic MCP publisher is absent');
+require(!existsSync('smithery.yaml'), 'legacy Smithery transport descriptor is absent');
 
-for (const f of fails) console.log(`  ${f}`);
-console.log(`\n  ${required.length} required, ${forbidden.length} forbidden, ${shape.length} shape checks — ${fails.length} failure(s)`);
+forbid(/axiom-relay\.reference-seller\.workers\.dev/i.test(joined), 'legacy runtime URL in identity metadata');
+forbid(/axiom\.elevatedai\.io/i.test(joined), 'superseded canonical URL in identity metadata');
+forbid(/live on Base|currently live|real settlements/i.test(joined), 'live economic claim in identity metadata');
+forbid(/"(?:remotes|packages)"\s*:/i.test(read('server.json')), 'publishable MCP transport in server.json');
+
+for (const failure of fails) console.log(`  ${failure}`);
+console.log(`\n  ${identityFiles.length} identity files checked — ${fails.length} failure(s)`);
 process.exit(fails.length ? 1 : 0);

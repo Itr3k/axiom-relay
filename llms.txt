@@ -1,87 +1,13 @@
-# Axiom Relay by Elevated AI
+# Axiom Relay legacy integration repository (retired)
 
-> Canonical site: https://axiom.elevatedai.io
-> API origin:     https://axiom-relay.reference-seller.workers.dev
-> Parent:         Elevated AI (https://elevatedai.io)
->
-> Axiom Relay is the neutral economic control, routing, orchestration and evidence layer for autonomous software. It evaluates economic intent against operator policy, discovers and compares eligible services, providers and payment rails, validates and orchestrates execution, preserves the authorization boundary, and records portable evidence for actions authorized and signed externally.
+> This repository is historical source only. It offers no live API, MCP,
+> payment, crypto, agent, or execution surface.
 
-# Axiom Relay
+Do not infer current availability, product behavior, pricing, security status,
+or endpoints from files or examples in this repository.
 
-> An x402 smart router for autonomous agents. Give it a capability rather than a
-> URL: it returns a validated, eligible x402 route with an explainable decision
-> reason, pays the seller directly, and returns the result.
-> Non-custodial and keyless — Axiom never holds buyer or seller funds.
-
-Pricing: 3% of the seller price, capped at $0.50 per purchase. No minimum
-fee. A fee too small for the facilitator to settle is waived and the purchase is
-routed free while free-routing capacity remains.
-
-Protocols: x402 v2 (`exact` scheme), Base mainnet (eip155:8453) and Base
-Sepolia (eip155:84532), USDC. Model Context Protocol. A2A Agent Card.
-
-## Endpoints
-
-- [Machine descriptor](https://axiom-relay.reference-seller.workers.dev/.well-known/x402): capabilities, pricing, schemas, availability
-- [Route by capability](https://axiom-relay.reference-seller.workers.dev/v1/route): POST a capability, receive ranked providers and a signed quote
-- [Quote a URL](https://axiom-relay.reference-seller.workers.dev/v1/quote): POST a known x402 resource URL, receive its price and Axiom's fee
-- [Execute](https://axiom-relay.reference-seller.workers.dev/v1/request): POST a quote plus signed authorisations
-- [Health](https://axiom-relay.reference-seller.workers.dev/health): status, network, facilitator, gates
-- [Provider listing](https://axiom-relay.reference-seller.workers.dev/v1/discovery): x402 resource listing for this relay
-
-## Documentation
-
-- [OpenAPI 3.1](https://axiom-relay.reference-seller.workers.dev/openapi.json): complete request and response schemas
-- [SKILL.md](https://axiom-relay.reference-seller.workers.dev/SKILL.md): when and how an agent should use Axiom
-- [WebMCP integration](https://axiom.elevatedai.io/integrations/webmcp): live experimental browser integration
-- [WebMCP manifest](https://axiom.elevatedai.io/webmcp/manifest.json): public contextual-tool catalog and authority boundaries
-- [A2A Agent Card](https://axiom-relay.reference-seller.workers.dev/.well-known/agent-card.json): agent-to-agent capability descriptor
-- [MCP manifest](https://axiom-relay.reference-seller.workers.dev/.well-known/mcp.json): Model Context Protocol tools
-- [Source and SDK](https://github.com/Itr3k/axiom-relay)
-
-## The Axiom Relay ecosystem
-
-One product, three surfaces, each authoritative for something different. Start
-at the discovery graph and every public Axiom Relay surface is one hop away.
-
-- [Discovery graph](https://axiom-relay.reference-seller.workers.dev/.well-known/axiom-relay.json): the canonical machine map of everything below
-- [Live network](https://axiomrelay.io): Bazaar, Commons, Concierge, services, agents and demonstrations
-- [Capability registry](https://axiomrelay.io/api/v1/capabilities): what the live network currently offers
-- [Directory](https://axiomrelay.io/api/v1/directory): listed services and their merchants
-- [Documentation](https://axiom.elevatedai.io/docs): architecture, security, economics, integration guidance
-
-This runtime is the infrastructure and economic layer. It is not the live
-network and it is not the documentation site; those are separate
-implementations of the same product, linked above.
-
-## Notes for implementers
-
-- Sign with the standard x402 SDK. Axiom never receives a private key.
-- When `feePolicy` is `fee_waived_micropayment`, omit the fee authorisation.
-- `free_route_quota_exhausted` means Axiom's free capacity is spent, not that
-  the purchase or provider is invalid.
-- Fallback advances only on positive evidence the previous seller was unpaid;
-  an ambiguous settlement halts the attempt chain.
-
-## Axiom Crypto (beta; live)
-
-Axiom Crypto Beta uses LI.FI as the enabled routing provider. Non-custodial crypto routing for autonomous agents: Axiom compares execution routes, validates transaction safety and total cost, and returns transactions for the agent to sign. Axiom never takes custody and never signs.
-
-Execution providers: LI.FI
-Chains: Ethereum, Base, Arbitrum One, OP Mainnet
-Assets: ETH, USDC, USDT, WETH
-Fee: 15 bps, embedded integrator fee, collected by the execution provider during the swap
-Quote: POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/quote
-Analyze (no transaction returned): POST https://axiom-relay.reference-seller.workers.dev/v1/crypto/analyze
-
-WebMCP page: https://axiom.elevatedai.io/integrations/webmcp
-WebMCP manifest: https://axiom.elevatedai.io/webmcp/manifest.json
-
-- Live Beta service with a published per-transaction capacity limit
-- Axiom never takes custody of principal
-- Axiom never signs a customer transaction and holds no customer key
-- Approvals are exact-amount; unlimited approvals are refused
-- Slippage is never widened beyond what the caller specified
-- Route calldata is validated against the request, not trusted from the provider
-- Selection is deterministic and the reason is returned with every quote
-- Provider fees and Axiom's fee are disclosed separately, never as one figure
+- Current product: https://axiomrelay.io
+- Live capabilities: https://axiomrelay.io/api/v1/capabilities
+- Service discovery: https://axiomrelay.io/.well-known/axiom-services.json
+- Agent Card: https://axiomrelay.io/.well-known/agent-card.json
+- OpenAPI: https://axiomrelay.io/openapi.json
